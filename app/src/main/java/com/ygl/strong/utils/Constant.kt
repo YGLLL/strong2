@@ -1,0 +1,7 @@
+package com.ygl.strong.utils
+
+object Constant {
+    const val PLAY_REFERER = "https://www.bilibili.com"
+    const val PLAY_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
+    const val TEST_COOKIE = "buvid3=231E84FB-67BD-307E-B42B-D0FC7A50CE6712985infoc; i-wanna-go-back=-1; _uuid=B5893CEB-6A1D-910CE-10764-10BC2FA4296A314444infoc; buvid4=629F95D3-16F7-D677-B834-E2F743483B6415304-022062714-d1Yha6Nk5qcwhhDb18mcoA%3D%3D; CURRENT_BLACKGAP=0; LIVE_BUVID=AUTO7616563371421985; buvid_fp_plain=undefined; nostalgia_conf=-1; blackside_state=0; b_nut=100; CURRENT_FNVAL=4048; rpdid=|(um|km~R|lY0J'uYYmlR|)~J; header_theme_version=CLOSE; is-2022-channel=1; CURRENT_PID=bd898a90-d150-11ed-ac78-5bdce49c7aa5; home_feed_column=4; FEED_LIVE_VERSION=V8; bp_article_offset_103654579=794652938050994200; browser_resolution=1280-569; fingerprint=e717726bdf89939efe5e14e5343044dd; buvid_fp=ea0957b6f9776d27b164a5b50c722a67; CURRENT_QUALITY=0; DedeUserID=103654579; DedeUserID__ckMd5=68bc474ded064b7b; SESSDATA=26a946ea%2C1700141678%2C05452%2A52; bili_jct=0f4bb6fe7403175ecf9dffc9377bdb56; bp_video_offset_103654579=797794749636411500; _dfcaptcha=cc0ae05f6ddab6343c031fdad5a344d8; b_ut=5; PVID=4"
+}
