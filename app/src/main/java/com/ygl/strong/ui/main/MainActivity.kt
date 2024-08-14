@@ -216,6 +216,7 @@ class MainActivity : BaseActivity() {
                     headers.put("Referer",Constant.PLAY_REFERER)
                     headers.put("User-Agent",Constant.PLAY_USER_AGENT)
                     mVideoView?.setUrl(rawUrl,headers)
+                    showToast("无缓存")
                 }else{
                     //有缓存，使用缓存播放
                     mVideoView?.setUrl(cacheUrl)

@@ -9,17 +9,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
     <TextView
         android:id="@+id/tv_reply_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textColor="@color/black"
-        android:layout_marginTop="4dp"/>
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/gray"
+        android:background="@color/silver"
         android:layout_marginTop="10dp"/>
 </LinearLayout>
