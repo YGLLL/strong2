@@ -61,12 +61,12 @@ class MainActivity : BaseActivity() {
         mPreloadManager = PreloadManager.getInstance(this)
 
         val vSearch = findViewById<View>(R.id.v_search)
-        val flReply = findViewById<View>(R.id.fl_reply)
+        val ivReply = findViewById<View>(R.id.iv_reply)
         mTvReplyCount = findViewById(R.id.tv_reply_count)
         vSearch.setOnClickListener {
             startActivity(Intent(this,SearchActivity::class.java))
         }
-        flReply.setOnClickListener {
+        ivReply.setOnClickListener {
             if (mLoading?.isShowing != true){
                 getCurReply()
             }

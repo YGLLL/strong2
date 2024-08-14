@@ -17,27 +17,27 @@
         android:layout_gravity="end|top"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
-        android:background="@color/gray"/>
+        android:background="@color/gray"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="20dp">
-        <FrameLayout
-            android:id="@+id/fl_reply"
+        <ImageView
+            android:id="@+id/iv_reply"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@color/black">
-            <TextView
-                android:id="@+id/tv_reply_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:layout_gravity="bottom|center_horizontal"/>
-        </FrameLayout>
+            android:src="@mipmap/comment"/>
+        <TextView
+            android:id="@+id/tv_reply_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"/>
         <View
             android:layout_width="0dp"
             android:layout_height="200dp"/>
