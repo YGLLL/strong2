@@ -26,10 +26,6 @@ object DB {
             .find(VideoDetail::class.java)
     }
 
-    fun userFeelChange(){
-
-    }
-
     fun recordVideoPlayInfo(id: Long, date: Long, happyScore: Int) {
         val values = ContentValues()
         values.put("watchDate",date.toString())
@@ -38,5 +34,9 @@ object DB {
         if (happyScore == -1){
             userFeelChange()
         }
+    }
+
+    fun userFeelChange(){
+
     }
 }

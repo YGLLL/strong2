@@ -203,6 +203,7 @@ public class PreloadManager {
         }
     }
 
+    //批量获取播放链接
     public void preloadUrls(List<VideoDetail> nextList, @NotNull Function0<Unit> next) {
         PreloadUrlsTask task = new PreloadUrlsTask();
         task.mNextList = nextList;
@@ -210,6 +211,7 @@ public class PreloadManager {
         new Thread(task).start();
     }
 
+    //单个视频缓存完成时调用
     public void oneVideoPreloaded(String url) {
         if (onVideoPreloaded!=null){
             String bvid = "";

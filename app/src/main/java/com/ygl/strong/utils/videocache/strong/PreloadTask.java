@@ -1,24 +1,13 @@
 package com.ygl.strong.utils.videocache.strong;
 
-import android.text.TextUtils;
-
-import com.google.gson.Gson;
-import com.ygl.strong.http.dto.PlayUrlDto;
 import com.ygl.strong.utils.videocache.HttpProxyCacheServer;
-
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import xyz.doikki.videoplayer.util.L;
 
 /**

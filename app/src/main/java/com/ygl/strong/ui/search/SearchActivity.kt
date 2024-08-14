@@ -53,7 +53,7 @@ class SearchActivity : BaseActivity() {
 
     private fun search(keyword: String) {
         showLoading()
-        Api.API_BILIBILI.search(keyword = keyword).enqueue(object : Callback<SearchDto>{
+        Api.BILIBILI.search(keyword = keyword).enqueue(object : Callback<SearchDto>{
             override fun onResponse(call: Call<SearchDto>, response: Response<SearchDto>) {
                 val body = response.body()
                 if (body == null || body.code != "0"){
@@ -97,7 +97,7 @@ class SearchActivity : BaseActivity() {
     }
 
     private fun loopAddData(index:Int, loopList: MutableList<SearchDto.SearchDataResultData>, end: ((msg: String) -> Unit)?){
-        Api.API_BILIBILI.pagelist(bvid = loopList[index].bvid).enqueue(object :Callback<PagelistDto>{
+        Api.BILIBILI.pagelist(bvid = loopList[index].bvid).enqueue(object :Callback<PagelistDto>{
             override fun onResponse(call: Call<PagelistDto>, response: Response<PagelistDto>) {
                 val body = response.body()
 

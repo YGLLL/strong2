@@ -16,10 +16,9 @@ public class Http {
 
     public final static long DEFAULT_TIMEOUT = 40L;
     public static String sessionId;
-    public static String baseUrl = "https://www.bilibili.com/";
+    public static String baseUrl = "https://api.bilibili.com/";
 
-    private Retrofit mMainRetrofit;
-    private Retrofit mApiRetrofit;
+    private Retrofit mRetrofit;
 
     public Http() {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -29,23 +28,15 @@ public class Http {
                 .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
-        mMainRetrofit = new Retrofit.Builder()
+        mRetrofit = new Retrofit.Builder()
                 .client(client)
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        mApiRetrofit = new Retrofit.Builder()
-                .client(client)
-                .baseUrl("https://api.bilibili.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
     }
 
-    public <T> T createMainApi(Class<T> tClass) {
-        return mMainRetrofit.create(tClass);
+    public <T> T createApi(Class<T> tClass) {
+        return mRetrofit.create(tClass);
     }
 
-    public <T> T createApiApi(Class<T> tClass) {
-        return mApiRetrofit.create(tClass);
-    }
 }

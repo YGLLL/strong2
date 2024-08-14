@@ -43,7 +43,7 @@ class ReplyFragment(val mAid:String) : BottomSheetDialogFragment() {
     override fun onStart() {
         super.onStart()
         showLoading()
-        Api.API_BILIBILI.getReplys(pn = "1", oid = mAid).enqueue(object :
+        Api.BILIBILI.getReplys(pn = "1", oid = mAid).enqueue(object :
             Callback<ReplyDto> {
             override fun onResponse(call: Call<ReplyDto>, response: Response<ReplyDto>) {
                 dismissLoading()

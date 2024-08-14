@@ -15,7 +15,9 @@ import kotlin.jvm.functions.Function0;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
+/**
+ * 批量获取播放链接
+ */
 public class PreloadUrlsTask implements Runnable {
 
     public List<VideoDetail> mNextList;

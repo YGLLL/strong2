@@ -66,19 +66,13 @@ public class Tiktok2Adapter extends PagerAdapter {
         }
 
         VideoDetail item = mVideoBeans.get(position);
-        //开始预加载
+        //当创建页面时则开始预加载
         PreloadManager.getInstance(context).addPreloadTask(PreloadUrlsTask.RAW_URLS.get(item.getBvid()), position);
 //        Glide.with(context)
 //                .load(item.coverImgUrl)
 //                .placeholder(android.R.color.white)
 //                .into(viewHolder.mThumb);
         viewHolder.mTitle.setText(item.getTitle());
-        viewHolder.mTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "点击了标题", Toast.LENGTH_SHORT).show();
-            }
-        });
         viewHolder.mPosition = position;
         container.addView(view);
         return view;

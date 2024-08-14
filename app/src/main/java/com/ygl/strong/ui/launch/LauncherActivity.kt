@@ -32,7 +32,7 @@ class LauncherActivity : BaseActivity() {
     }
 
     private fun loadData(next:()->Unit) {
-        Api.API_BILIBILI.dynamicRecommended().enqueue(object : Callback<DynamicRecommendDto> {
+        Api.BILIBILI.dynamicRecommended().enqueue(object : Callback<DynamicRecommendDto> {
             override fun onResponse(call: Call<DynamicRecommendDto>, response: Response<DynamicRecommendDto>) {
                 val body = response.body()
 

@@ -56,10 +56,12 @@ class MainActivity : BaseActivity() {
     }
 
     private fun startInit() {
+        //初始化三大核心部件
         initViewPager()
         initVideoView()
         mPreloadManager = PreloadManager.getInstance(this)
 
+        //设置ui
         val vSearch = findViewById<View>(R.id.v_search)
         val ivReply = findViewById<View>(R.id.iv_reply)
         mTvReplyCount = findViewById(R.id.tv_reply_count)
@@ -72,6 +74,7 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        //开始加载数据
         loadVideos(true)
     }
 
@@ -81,27 +84,37 @@ class MainActivity : BaseActivity() {
         replyFragment.show(supportFragmentManager,replyFragment.tag)
     }
 
+    /**
+     * 从数据库读取视频数据并获取播放链接
+     * 获取完播放链接后增页并开始缓存
+     */
     private fun loadVideos(firstLoad:Boolean = false) {
         if (firstLoad)showLoading()
+
+        //从数据库读取数据
         mDBpage++
         val nextList = DB.readVideo(mDBpage,READ_VIDEO_SIZE)
+
         if (nextList.isEmpty())return
+        //获取播放链接
         mPreloadManager?.preloadUrls(nextList){
             runOnUiThread {
                 if (firstLoad){
+                    //如果是第一次加载数据，则自动播放
                     mPreloadManager?.setVideoPreloadedCallback{ bvid ->
                         if (bvid == nextList[0].bvid){
                             runOnUiThread {
                                 dismissLoading()
-                                mViewPager?.currentItem = 0
+                                mViewPager?.currentItem = 0//移动到第0页
                                 mViewPager?.post { startPlay(0) }
                                 mPreloadManager?.setVideoPreloadedCallback(null)
                             }
                         }
                     }
                 }
+
                 mVideoList.addAll(nextList)
-                mTiktok2Adapter?.notifyDataSetChanged()
+                mTiktok2Adapter?.notifyDataSetChanged()//执行完这行后，会在mTiktok2Adapter内部触发预加载
             }
         }
     }
@@ -149,6 +162,7 @@ class MainActivity : BaseActivity() {
                 if (position == mCurPos) return  //如果滑动后，没有进入下一个视频，那么就不重新播放当前视频了
                 recordVideoPlayInfo(mCurPos)
                 startPlay(position)
+                //当看到倒数第三页时，添加下一波数据
                 if (position == (mVideoList.size-3)){
                     loadVideos()
                 }
@@ -166,23 +180,6 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
-    }
-
-    private fun recordVideoPlayInfo(position: Int){
-        val date = System.currentTimeMillis()
-        val curPosition = mVideoView?.currentPosition?:0
-        val duration = mVideoView?.duration?:0
-        var ratio = 0f
-        if (duration != 0L){
-            ratio = curPosition.toFloat()/duration
-        }
-        val happyScore = if (ratio<0.5){
-            -1
-        }else{
-            0
-        }
-        val curVideo = mVideoList[position]
-        DB.recordVideoPlayInfo(curVideo.id,date,happyScore)
     }
 
     private fun initVideoView() {
@@ -213,12 +210,14 @@ class MainActivity : BaseActivity() {
                 LogUtil.e("MainA","rawUrl:${rawUrl}")
                 LogUtil.e("MainA","cacheUrl:${cacheUrl}")
                 if (rawUrl == cacheUrl){
+                    //没有缓存，使用原链接播放
                     val headers: HashMap<String, String> = HashMap()
                     headers.put("Host",Utils.playUrl2Host(rawUrl))
                     headers.put("Referer",Constant.PLAY_REFERER)
                     headers.put("User-Agent",Constant.PLAY_USER_AGENT)
                     mVideoView?.setUrl(rawUrl,headers)
                 }else{
+                    //有缓存，使用缓存播放
                     mVideoView?.setUrl(cacheUrl)
                 }
 
@@ -230,6 +229,23 @@ class MainActivity : BaseActivity() {
                 break
             }
         }
+    }
+
+    private fun recordVideoPlayInfo(position: Int){
+        val date = System.currentTimeMillis()
+        val curPosition = mVideoView?.currentPosition?:0
+        val duration = mVideoView?.duration?:0
+        var ratio = 0f
+        if (duration != 0L){
+            ratio = curPosition.toFloat()/duration
+        }
+        val happyScore = if (ratio<0.5){
+            -1
+        }else{
+            0
+        }
+        val curVideo = mVideoList[position]
+        DB.recordVideoPlayInfo(curVideo.id,date,happyScore)
     }
 
     override fun onRequestPermissionsResult(
