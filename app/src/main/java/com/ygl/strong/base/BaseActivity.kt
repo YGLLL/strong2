@@ -55,11 +55,17 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun showLoading() {
-        showLoading(true)
+        runOnUiThread { showLoading(true) }
     }
-    protected fun showLoading(cancelable: Boolean) {
+    protected fun showLoading(cancelable:Boolean) {
         if (mLoading != null && mLoading?.isShowing != true) {
             runOnUiThread { mLoading?.show(cancelable) }
+        }
+    }
+
+    protected fun showLoading(cancelable:Boolean,text:String) {
+        if (mLoading != null && mLoading?.isShowing != true) {
+            runOnUiThread { mLoading?.show(cancelable,text) }
         }
     }
 

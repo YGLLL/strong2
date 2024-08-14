@@ -78,13 +78,20 @@ class ReplyFragment(val mAid:String) : BottomSheetDialogFragment() {
     }
 
     protected fun showLoading() {
-        showLoading(true)
+        activity?.runOnUiThread { showLoading(true) }
     }
-    protected fun showLoading(cancelable: Boolean) {
+    protected fun showLoading(cancelable:Boolean) {
         if (mLoading != null && mLoading?.isShowing != true) {
             activity?.runOnUiThread { mLoading?.show(cancelable) }
         }
     }
+
+    protected fun showLoading(cancelable:Boolean,text:String) {
+        if (mLoading != null && mLoading?.isShowing != true) {
+            activity?.runOnUiThread { mLoading?.show(cancelable,text) }
+        }
+    }
+
     protected fun dismissLoading() {
         if (mLoading != null && mLoading?.isShowing != false) {
             activity?.runOnUiThread { mLoading?.dismiss() }

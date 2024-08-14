@@ -89,7 +89,7 @@ class MainActivity : BaseActivity() {
      * 获取完播放链接后增页并开始缓存
      */
     private fun loadVideos(firstLoad:Boolean = false) {
-        if (firstLoad)showLoading()
+        if (firstLoad)showLoading(false,getString(R.string.loading_network_data))
 
         //从数据库读取数据
         mDBpage++

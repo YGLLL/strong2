@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/pb"
         android:layout_width="50dp"
         android:layout_height="50dp"
         style="?android:attr/progressBarStyleLarge"
@@ -11,4 +12,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/pb"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/white"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
