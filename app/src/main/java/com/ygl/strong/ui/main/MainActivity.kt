@@ -211,12 +211,12 @@ class MainActivity : BaseActivity() {
                 LogUtil.e("MainA","cacheUrl:${cacheUrl}")
                 if (rawUrl == cacheUrl){
                     //没有缓存，使用原链接播放
+                    showToast(getString(R.string.loading_at_full_capacity))
                     val headers: HashMap<String, String> = HashMap()
-                    headers.put("Host",Utils.playUrl2Host(rawUrl))
-                    headers.put("Referer",Constant.PLAY_REFERER)
-                    headers.put("User-Agent",Constant.PLAY_USER_AGENT)
+                    headers["Host"] = Utils.playUrl2Host(rawUrl)
+                    headers["Referer"] = Constant.PLAY_REFERER
+                    headers["User-Agent"] = Constant.PLAY_USER_AGENT
                     mVideoView?.setUrl(rawUrl,headers)
-                    showToast("无缓存")
                 }else{
                     //有缓存，使用缓存播放
                     mVideoView?.setUrl(cacheUrl)
@@ -256,10 +256,10 @@ class MainActivity : BaseActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            1 -> if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            1 -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startInit()
             } else {
-                showToast("没有足够的权限")
+                showToast(getString(R.string.not_enough_access))
             }
         }
     }
