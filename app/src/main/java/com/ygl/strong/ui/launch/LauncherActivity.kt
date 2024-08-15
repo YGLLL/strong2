@@ -48,6 +48,7 @@ class LauncherActivity : BaseActivity() {
                     videoDetail.videos = bean.videos
                     videoDetail.first_frame = bean.first_frame
                     videoDetail.short_link_v2 = bean.short_link_v2
+                    videoDetail.duration = bean.duration
 
                     if (DB.isNewVideo(videoDetail) && !Utils.isSlowVideo(videoDetail)){
                         videoDetail.save()

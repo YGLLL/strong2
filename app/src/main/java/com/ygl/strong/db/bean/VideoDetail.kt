@@ -15,4 +15,5 @@ class VideoDetail : LitePalSupport() {
     var videos:Int = 0
     var first_frame:String = ""
     var short_link_v2:String = ""
+    var duration:Int = 0
 }

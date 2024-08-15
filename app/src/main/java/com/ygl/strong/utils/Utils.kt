@@ -37,6 +37,7 @@ object Utils {
     }
 
     fun isSlowVideo(videoDetail: VideoDetail): Boolean {
-        return (videoDetail.title.indexOf("《")!=-1 && videoDetail.title.indexOf("》")!=-1) || (videoDetail.videos>1)
+//        return (videoDetail.title.indexOf("《")!=-1 && videoDetail.title.indexOf("》")!=-1) || (videoDetail.videos>1)
+        return (videoDetail.duration > 20*60) || (videoDetail.videos>1)
     }
 }
