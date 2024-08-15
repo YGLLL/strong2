@@ -12,6 +12,7 @@ class DynamicRecommendDto {
 
     class VideoDetail{
         var aid:String = ""
+        var videos:Int = 0
         var tname:String = ""
         var title:String = ""
         var cid:String = ""
