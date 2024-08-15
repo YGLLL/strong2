@@ -134,7 +134,7 @@ class MainActivity : BaseActivity() {
 
     private fun initViewPager() {
         mViewPager = findViewById(R.id.vvp)
-        mViewPager?.setOffscreenPageLimit(4) //预加载4，缓存9
+        mViewPager?.setOffscreenPageLimit(10) //预加载10，缓存15
         mTiktok2Adapter = Tiktok2Adapter(mVideoList)
         mViewPager?.setAdapter(mTiktok2Adapter)
         mViewPager?.setOverScrollMode(View.OVER_SCROLL_NEVER) //禁止过度滑动
@@ -204,10 +204,10 @@ class MainActivity : BaseActivity() {
 
                 val videoDetail: VideoDetail = mVideoList[position]
 //                mTvReplyCount?.text = videoDetail.reply
-                mTvReplyCount?.text = videoDetail.videos.toString()
 
                 val rawUrl = PreloadUrlsTask.RAW_URLS[videoDetail.bvid]
                 val cacheUrl = mPreloadManager?.getPlayUrl(rawUrl)
+                mTvReplyCount?.text = "rawUrl:${rawUrl}\ncacheUrl:${cacheUrl}"
                 LogUtil.e("MainA","rawUrl:${rawUrl}")
                 LogUtil.e("MainA","cacheUrl:${cacheUrl}")
                 if (rawUrl == cacheUrl){
