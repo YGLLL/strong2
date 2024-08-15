@@ -71,9 +71,9 @@ public class Tiktok2Adapter extends PagerAdapter {
         VideoDetail item = mVideoBeans.get(position);
         //当创建页面时则开始预加载
         PreloadManager.getInstance(context).addPreloadTask(PreloadUrlsTask.RAW_URLS.get(item.getBvid()), position);
-        Glide.with(context)
-                .load(item.getFirst_frame())
-                .into(viewHolder.mThumb);
+//        Glide.with(context)
+//                .load(item.getFirst_frame())
+//                .into(viewHolder.mThumb);
         viewHolder.mTitle.setText(item.getTitle());
         viewHolder.mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
