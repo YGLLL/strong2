@@ -4,8 +4,8 @@
 数据来自bilibili。**
 
 ## 界面展示
-![](https://gitee.com/YGLLL/strong2/blob/master/screenshot/1.jpg)
-![](https://gitee.com/YGLLL/strong2/blob/master/screenshot/2.jpg)
+![](https://gitee.com/YGLLL/strong2/raw/master/screenshot/1.jpg)
+![](https://gitee.com/YGLLL/strong2/raw/master/screenshot/2.jpg)
 
 ## 项目特点
 - 短视频风格的界面，可以向下无限滑动
