@@ -43,6 +43,7 @@ class LauncherActivity : BaseActivity() {
                     videoDetail.cid = bean.cid
                     videoDetail.title = bean.title
                     videoDetail.reply = bean.stat?.reply?:""
+                    videoDetail.tname = bean.tname
 
                     if (DB.isNewVideo(videoDetail)){
                         videoDetail.save()

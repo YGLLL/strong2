@@ -11,4 +11,5 @@ class VideoDetail : LitePalSupport() {
     var happyScore:Int = 0
     var watchDate:Long = 0//0表示没有看过此视频
     var reply:String = ""
+    var tname:String = ""
 }
