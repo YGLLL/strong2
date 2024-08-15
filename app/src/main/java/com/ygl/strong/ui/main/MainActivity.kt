@@ -203,8 +203,7 @@ class MainActivity : BaseActivity() {
                 Utils.removeViewFormParent(mVideoView)
 
                 val videoDetail: VideoDetail = mVideoList[position]
-//                mTvReplyCount?.text = videoDetail.reply
-                mTvReplyCount?.text = videoDetail.videos.toString()
+                mTvReplyCount?.text = videoDetail.reply
 
                 val rawUrl = PreloadUrlsTask.RAW_URLS[videoDetail.bvid]
                 val cacheUrl = mPreloadManager?.getPlayUrl(rawUrl)

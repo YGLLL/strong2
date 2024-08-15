@@ -2,6 +2,7 @@ package com.ygl.strong.utils
 
 import android.view.View
 import android.widget.FrameLayout
+import com.ygl.strong.db.bean.VideoDetail
 import com.ygl.strong.http.dto.RecommendDto
 
 object Utils {
@@ -33,5 +34,9 @@ object Utils {
         }
 //        LogUtil.e("my host:",host)
         return host
+    }
+
+    fun isSlowVideo(videoDetail: VideoDetail): Boolean {
+        return (videoDetail.title.indexOf("《")!=-1 && videoDetail.title.indexOf("》")!=-1) || (videoDetail.videos>1)
     }
 }

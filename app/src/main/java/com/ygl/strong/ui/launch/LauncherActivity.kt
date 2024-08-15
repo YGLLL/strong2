@@ -10,6 +10,7 @@ import com.ygl.strong.http.Api
 import com.ygl.strong.http.dto.DynamicRecommendDto
 import com.ygl.strong.http.dto.RecommendDto
 import com.ygl.strong.ui.main.MainActivity
+import com.ygl.strong.utils.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,7 +49,7 @@ class LauncherActivity : BaseActivity() {
                     videoDetail.first_frame = bean.first_frame
                     videoDetail.short_link_v2 = bean.short_link_v2
 
-                    if (DB.isNewVideo(videoDetail)){
+                    if (DB.isNewVideo(videoDetail) && !Utils.isSlowVideo(videoDetail)){
                         videoDetail.save()
                     }
                 }
