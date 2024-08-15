@@ -18,6 +18,8 @@ class DynamicRecommendDto {
         var cid:String = ""
         var bvid:String = ""
         var stat: StatClass? = null
+        var first_frame:String = ""
+        var short_link_v2:String = ""
     }
 
     class StatClass{

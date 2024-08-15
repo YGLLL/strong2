@@ -1,6 +1,8 @@
 package com.ygl.strong.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.Glide;
 import com.ygl.strong.R;
 import com.ygl.strong.db.bean.VideoDetail;
 import com.ygl.strong.utils.videocache.strong.PreloadManager;
@@ -68,11 +71,20 @@ public class Tiktok2Adapter extends PagerAdapter {
         VideoDetail item = mVideoBeans.get(position);
         //当创建页面时则开始预加载
         PreloadManager.getInstance(context).addPreloadTask(PreloadUrlsTask.RAW_URLS.get(item.getBvid()), position);
-//        Glide.with(context)
-//                .load(item.coverImgUrl)
-//                .placeholder(android.R.color.white)
-//                .into(viewHolder.mThumb);
+        Glide.with(context)
+                .load(item.getFirst_frame())
+                .into(viewHolder.mThumb);
         viewHolder.mTitle.setText(item.getTitle());
+        viewHolder.mTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(item.getShort_link_v2())); // 替换为你要打开的网址
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent);
+                }
+            }
+        });
         viewHolder.mPosition = position;
         container.addView(view);
         return view;
