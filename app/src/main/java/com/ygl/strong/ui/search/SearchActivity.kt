@@ -71,18 +71,11 @@ class SearchActivity : BaseActivity() {
                     }
                 }
                 if (searchDataResultData.size>0){
-                    loopAddData(0,searchDataResultData){ msg->
-                        if (msg == "SUCCESS"){
-                            dismissLoading()
-                            showResult()
-                            mData.clear()
-                            mData.addAll(searchDataResultData)
-                            mAdapter?.notifyDataSetChanged()
-                        }else{
-                            dismissLoading()
-                            showToast(msg)
-                        }
-                    }
+                    dismissLoading()
+                    showResult()
+                    mData.clear()
+                    mData.addAll(searchDataResultData)
+                    mAdapter?.notifyDataSetChanged()
                 }else{
                     dismissLoading()
                     showToast("error")
@@ -96,38 +89,38 @@ class SearchActivity : BaseActivity() {
         })
     }
 
-    private fun loopAddData(index:Int, loopList: MutableList<SearchDto.SearchDataResultData>, end: ((msg: String) -> Unit)?){
-        Api.BILIBILI.pagelist(bvid = loopList[index].bvid).enqueue(object :Callback<PagelistDto>{
-            override fun onResponse(call: Call<PagelistDto>, response: Response<PagelistDto>) {
-                val body = response.body()
-
-                body?.data?.get(0)?.let {
-                    val bean = loopList[index]
-                    val videoDetail = VideoDetail()
-                    videoDetail.aid = bean.aid
-                    videoDetail.bvid = bean.bvid
-                    videoDetail.cid = it.cid
-                    videoDetail.title = bean.title
-                    videoDetail.reply = "0"
-
-                    if (DB.isNewVideo(videoDetail)){
-                        videoDetail.save()
-                    }
-                }
-
-                val nextIndex = index+1
-                if ((index+1) == loopList.size){
-                    end?.invoke("SUCCESS")
-                }else{
-                    loopAddData(nextIndex,loopList,end)
-                }
-            }
-
-            override fun onFailure(call: Call<PagelistDto>, t: Throwable) {
-                end?.invoke("fail:${t.toString()}")
-            }
-        })
-    }
+//    private fun loopAddData(index:Int, loopList: MutableList<SearchDto.SearchDataResultData>, end: ((msg: String) -> Unit)?){
+//        Api.BILIBILI.pagelist(bvid = loopList[index].bvid).enqueue(object :Callback<PagelistDto>{
+//            override fun onResponse(call: Call<PagelistDto>, response: Response<PagelistDto>) {
+//                val body = response.body()
+//
+//                body?.data?.get(0)?.let {
+//                    val bean = loopList[index]
+//                    val videoDetail = VideoDetail()
+//                    videoDetail.aid = bean.aid
+//                    videoDetail.bvid = bean.bvid
+//                    videoDetail.cid = it.cid
+//                    videoDetail.title = bean.title
+//                    videoDetail.reply = "0"
+//
+//                    if (DB.isNewVideo(videoDetail)){
+//                        videoDetail.save()
+//                    }
+//                }
+//
+//                val nextIndex = index+1
+//                if ((index+1) == loopList.size){
+//                    end?.invoke("SUCCESS")
+//                }else{
+//                    loopAddData(nextIndex,loopList,end)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<PagelistDto>, t: Throwable) {
+//                end?.invoke("fail:${t.toString()}")
+//            }
+//        })
+//    }
 
     private fun showResult(){
         mLLEdit?.visibility = View.GONE

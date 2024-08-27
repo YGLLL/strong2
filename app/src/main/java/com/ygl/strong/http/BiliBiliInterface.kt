@@ -34,6 +34,7 @@ interface BiliBiliInterface {
         @Query("page") page:String = "1",
         @Query("pagesize") pagesize:String = "20"): Call<SearchDto>
 
+    //可以获取cid
     @GET("x/player/pagelist")
     fun pagelist(@Query("bvid") bvid:String,
                  @Query("jsonp") jsonp:String = "jsonp"): Call<PagelistDto>
