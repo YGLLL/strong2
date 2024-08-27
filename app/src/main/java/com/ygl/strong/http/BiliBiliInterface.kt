@@ -18,8 +18,10 @@ interface BiliBiliInterface {
                    @Query("otype") otype:String = "json"): Call<PlayUrlDto>
 
     @GET("x/v2/reply")
-    fun getReplys(@Query("jsonp") jsonp:String = "jsonp",
+    fun getReplys(@Header("Cookie") cookie:String = Constant.TEST_COOKIE,
+                  @Query("jsonp") jsonp:String = "jsonp",
                   @Query("pn") pn:String,
+                  @Query("ps") ps:String = "20",
                   @Query("type") type:String = "1",
                   @Query("oid") oid:String,
                   @Query("sort") sort:String = "2"): Call<ReplyDto>
