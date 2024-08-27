@@ -211,7 +211,7 @@ class MainActivity : BaseActivity() {
                 LogUtil.e("MainA","cacheUrl:${cacheUrl}")
                 if (rawUrl == cacheUrl){
                     //没有缓存，使用原链接播放
-//                    showToast(getString(R.string.loading_at_full_capacity))
+                    showToast(getString(R.string.loading_at_full_capacity))
                     val headers: HashMap<String, String> = HashMap()
                     headers["Host"] = Utils.playUrl2Host(rawUrl)
                     headers["Referer"] = Constant.PLAY_REFERER

@@ -48,7 +48,7 @@ public class PreloadManager {
     /**
      * 预加载的大小，每个视频预加载1.5M，这个参数可根据实际情况调整
      */
-    public static final double PRELOAD_LENGTH = 1.5 * 1024 * 1024;
+    public static final long PRELOAD_LENGTH = (1024+512) * 1024;
 
     private OnVideoPreloaded onVideoPreloaded;
 
