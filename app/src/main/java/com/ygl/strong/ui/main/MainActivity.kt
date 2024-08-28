@@ -4,11 +4,13 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
+import com.orhanobut.hawk.Hawk
 import com.ygl.strong.R
 import com.ygl.strong.base.BaseActivity
 import com.ygl.strong.db.DB
@@ -94,6 +96,16 @@ class MainActivity : BaseActivity() {
         //从数据库读取数据
         mDBpage++
         val nextList = DB.readVideo(mDBpage,READ_VIDEO_SIZE)
+        //如果下一页不满了，则从网络加载数据
+        val nextNextList = DB.readVideo(mDBpage+1,READ_VIDEO_SIZE)
+        if (nextNextList.size<READ_VIDEO_SIZE){
+            LogUtil.e("MainA","加载网络数据")
+            Utils.loadVideoDataByNetwork { msg->
+                if (!TextUtils.isEmpty(msg)){
+                    showToast(msg)
+                }
+            }
+        }
 
         if (nextList.isEmpty())return
         //获取播放链接

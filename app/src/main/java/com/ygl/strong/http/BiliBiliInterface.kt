@@ -40,6 +40,6 @@ interface BiliBiliInterface {
                  @Query("jsonp") jsonp:String = "jsonp"): Call<PagelistDto>
 
     @GET("x/web-interface/dynamic/region")
-    fun dynamicRecommended(@Query("ps") ps:String = "100",
+    fun dynamicRecommended(@Query("ps") ps:String = "50",
                            @Query("rid") rid:String = "1"): Call<DynamicRecommendDto>
 }

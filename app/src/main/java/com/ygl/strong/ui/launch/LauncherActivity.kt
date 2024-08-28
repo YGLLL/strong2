@@ -2,6 +2,7 @@ package com.ygl.strong.ui.launch
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import com.ygl.strong.R
 import com.ygl.strong.base.BaseActivity
 import com.ygl.strong.db.DB
@@ -26,41 +27,13 @@ class LauncherActivity : BaseActivity() {
         setContentView(R.layout.activity_launcher)
         setStatusBarTransparent()
         setControlBarTransparent()
-        loadData(){
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+        Utils.loadVideoDataByNetwork{msg->
+            if (TextUtils.isEmpty(msg)){
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }else{
+                showToast(msg)
+            }
         }
-    }
-
-    private fun loadData(next:()->Unit) {
-        Api.BILIBILI.dynamicRecommended().enqueue(object : Callback<DynamicRecommendDto> {
-            override fun onResponse(call: Call<DynamicRecommendDto>, response: Response<DynamicRecommendDto>) {
-                val body = response.body()
-
-                body?.data?.archives?.forEach { bean->
-                    val videoDetail = VideoDetail()
-                    videoDetail.aid = bean.aid
-                    videoDetail.bvid = bean.bvid
-                    videoDetail.cid = bean.cid
-                    videoDetail.title = bean.title
-                    videoDetail.reply = bean.stat?.reply?:""
-                    videoDetail.tname = bean.tname
-                    videoDetail.videos = bean.videos
-                    videoDetail.first_frame = bean.first_frame
-                    videoDetail.short_link_v2 = bean.short_link_v2
-                    videoDetail.duration = bean.duration
-
-                    if (DB.isNewVideo(videoDetail) && !Utils.isSlowVideo(videoDetail)){
-                        videoDetail.save()
-                    }
-                }
-                next.invoke()
-            }
-
-            override fun onFailure(call: Call<DynamicRecommendDto>, t: Throwable) {
-                showToast("load data Failure")
-            }
-
-        })
     }
 }

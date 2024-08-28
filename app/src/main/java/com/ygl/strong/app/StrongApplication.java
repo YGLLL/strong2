@@ -2,7 +2,7 @@ package com.ygl.strong.app;
 
 
 import android.app.Application;
-import android.content.Context;
+import com.orhanobut.hawk.Hawk;
 import com.ygl.strong.http.base.Http;
 import org.litepal.LitePal;
 
@@ -12,5 +12,6 @@ public class StrongApplication extends Application {
         super.onCreate();
         Http.initHttp();
         LitePal.initialize(this);
+        Hawk.init(this).build();
     }
 }

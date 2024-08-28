@@ -2,8 +2,14 @@ package com.ygl.strong.utils
 
 import android.view.View
 import android.widget.FrameLayout
+import com.ygl.strong.db.DB
 import com.ygl.strong.db.bean.VideoDetail
+import com.ygl.strong.http.Api
+import com.ygl.strong.http.dto.DynamicRecommendDto
 import com.ygl.strong.http.dto.RecommendDto
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 object Utils {
     /**
@@ -34,6 +40,37 @@ object Utils {
         }
 //        LogUtil.e("my host:",host)
         return host
+    }
+
+    fun loadVideoDataByNetwork(next:(msg:String)->Unit) {
+        Api.BILIBILI.dynamicRecommended().enqueue(object : Callback<DynamicRecommendDto> {
+            override fun onResponse(call: Call<DynamicRecommendDto>, response: Response<DynamicRecommendDto>) {
+                val body = response.body()
+
+                body?.data?.archives?.forEach { bean->
+                    val videoDetail = VideoDetail()
+                    videoDetail.aid = bean.aid
+                    videoDetail.bvid = bean.bvid
+                    videoDetail.cid = bean.cid
+                    videoDetail.title = bean.title
+                    videoDetail.reply = bean.stat?.reply?:""
+                    videoDetail.tname = bean.tname
+                    videoDetail.videos = bean.videos
+                    videoDetail.first_frame = bean.first_frame
+                    videoDetail.short_link_v2 = bean.short_link_v2
+                    videoDetail.duration = bean.duration
+
+                    if (DB.isNewVideo(videoDetail) && !isSlowVideo(videoDetail)){
+                        videoDetail.save()
+                    }
+                }
+                next.invoke("")
+            }
+
+            override fun onFailure(call: Call<DynamicRecommendDto>, t: Throwable) {
+                next.invoke("load data Failure")
+            }
+        })
     }
 
     fun isSlowVideo(videoDetail: VideoDetail): Boolean {

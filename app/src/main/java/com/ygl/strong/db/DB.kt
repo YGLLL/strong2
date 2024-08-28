@@ -20,7 +20,7 @@ object DB {
      */
     fun readVideo(page:Int, pageSize:Int) : List<VideoDetail> {
         return LitePal
-            .order("id desc")
+            .where("watchDate = ?","0")
             .limit(pageSize)
             .offset((page - 1) * pageSize)
             .find(VideoDetail::class.java)
