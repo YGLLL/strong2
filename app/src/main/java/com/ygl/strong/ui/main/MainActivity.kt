@@ -95,9 +95,9 @@ class MainActivity : BaseActivity() {
 
         //从数据库读取数据
         mDBpage++
-        val nextList = DB.readVideo(mDBpage,READ_VIDEO_SIZE)
+        val nextList = DB.readUnWatchVideo(mDBpage,READ_VIDEO_SIZE)
         //如果下一页不满了，则从网络加载数据
-        val nextNextList = DB.readVideo(mDBpage+1,READ_VIDEO_SIZE)
+        val nextNextList = DB.readUnWatchVideo(mDBpage+1,READ_VIDEO_SIZE)
         if (nextNextList.size<READ_VIDEO_SIZE){
             LogUtil.e("MainA","加载网络数据")
             Utils.loadVideoDataByNetwork { msg->

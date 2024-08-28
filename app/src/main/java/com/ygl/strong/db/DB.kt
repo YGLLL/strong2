@@ -18,7 +18,7 @@ object DB {
     /**
      * page 从1开始
      */
-    fun readVideo(page:Int, pageSize:Int) : List<VideoDetail> {
+    fun readUnWatchVideo(page:Int, pageSize:Int) : List<VideoDetail> {
         return LitePal
             .where("watchDate = ?","0")
             .limit(pageSize)
