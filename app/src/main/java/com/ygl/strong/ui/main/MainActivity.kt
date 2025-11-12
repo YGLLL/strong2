@@ -95,6 +95,7 @@ class MainActivity : BaseActivity() {
 
         //从数据库读取数据
         mDBpage++
+        //todo 需要排除掉已经加载到pageView的视频
         val nextList = DB.readUnWatchVideo(mDBpage,READ_VIDEO_SIZE)
         //如果下一页不满了，则从网络加载数据
         val nextNextList = DB.readUnWatchVideo(mDBpage+1,READ_VIDEO_SIZE)

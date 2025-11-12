@@ -21,3 +21,4 @@
 ## TODO:
 - 使用mvvm
 - 通过弹幕，评论，分析视频的特点，参考：https://zhuanlan.zhihu.com/p/477867834
+- 显示一个人偶
