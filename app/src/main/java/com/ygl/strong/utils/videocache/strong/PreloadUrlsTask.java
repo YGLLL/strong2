@@ -1,5 +1,7 @@
 package com.ygl.strong.utils.videocache.strong;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.ygl.strong.db.bean.VideoDetail;
 import com.ygl.strong.http.dto.PlayUrlDto;
@@ -35,8 +37,13 @@ public class PreloadUrlsTask implements Runnable {
         for (VideoDetail videoDetail : mNextList){
             String bvid = videoDetail.getBvid();
             String cid = videoDetail.getCid();
-            String playUrl = BilibiliPlayUrlFetcher.fetchPlayUrl(bvid, cid);
-            if (!playUrl.isEmpty()) {
+            String playUrl = "";
+            try {
+                playUrl = BilibiliVideoFetcher.getBilibiliVideoPlaybackLink(bvid, cid);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            if (!TextUtils.isEmpty(playUrl)) {
                 // 播放 playUrl
                 LogUtil.e("PreloadUrlsTask","获得播放链接："+playUrl);
                 RAW_URLS.put(bvid,playUrl);

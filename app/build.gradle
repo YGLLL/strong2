@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.ygl.strong'
-    compileSdk 32
+    compileSdk 32//todo 适配35
 
     defaultConfig {
         applicationId "com.ygl.strong"
-        minSdk 21
-        targetSdk 32
+        minSdk 24
+        targetSdk 32//todo 适配35
         versionCode 1
         versionName "1.0"
 

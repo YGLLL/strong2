@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">strong</string>
     <string name="app_name_upper_case">STRONG</string>
+    <string name="sign_message">sign-6</string>
     <string name="loading_network_data">正在加载网络数据</string>
     <string name="loading_at_full_capacity">正在全力加载中</string>
     <string name="not_enough_access">没有足够的权限</string>
