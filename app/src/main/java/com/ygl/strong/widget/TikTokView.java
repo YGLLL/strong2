@@ -71,7 +71,7 @@ public class TikTokView extends FrameLayout implements IControlComponent {
                 int endY = (int) event.getY();
                 if (Math.abs(endX - mStartX) < mScaledTouchSlop
                         && Math.abs(endY - mStartY) < mScaledTouchSlop) {
-                    performClick();
+                    performClick();//执行点击，父类已经对点击事件做了播放开始暂停的响应
                 }
                 break;
         }

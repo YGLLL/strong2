@@ -31,7 +31,6 @@
         android:textSize="16sp"
         android:lineSpacingExtra="4dp"
         android:textColor="@android:color/white"
-        android:elevation="5dp"
-        android:text="标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题"/>
+        android:elevation="5dp"/>
 
 </FrameLayout>
