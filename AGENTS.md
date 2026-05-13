@@ -15,15 +15,15 @@ strong2 是一个 Android 短视频播放器应用，基于 Bilibili 逆向 API 
 ### 项目在系统中的路径：
 /mnt/c/back/apj/strong2
 ### 主要代码文件夹介绍(位于项目路径/app/src/main/java/com/ygl/strong)：
-app:存放Application
-base:存放常用组件父类
-db:存放操作数据库的代码
-http:定义了API接口（来自逆向哔哩哔哩）
-ui:存放UI代码
-utils:存放工具类
-utils/videocache:存放视频缓存工具,采用Android官方缓存技术
-utils/videocache/strong:存放针对strong项目的自定义缓存相关代码
-widget:存放自定义组件
+- app:存放Application
+- base:存放常用组件父类
+- db:存放操作数据库的代码
+- http:定义了API接口（来自逆向哔哩哔哩）
+- ui:存放UI代码
+- utils:存放工具类
+- utils/videocache:存放视频缓存工具,采用Android官方缓存技术
+- utils/videocache/strong:存放针对strong项目的自定义缓存相关代码
+- widget:存放自定义组件
 
 ---
 
