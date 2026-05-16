@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.ygl.strong.widget.LoadingDialog
+import java.lang.reflect.Method
 
 open class BaseActivity : AppCompatActivity() {
     protected var mLoading: LoadingDialog? = null
@@ -27,9 +28,22 @@ open class BaseActivity : AppCompatActivity() {
 
     /**
      * 把状态栏设成透明
+     * 适配 API 35：Android 15 强制 edge-to-edge，通过代码 opt-out
      */
     protected open fun setStatusBarTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Android 15 (API 35) 强制 edge-to-edge，通过反射调用 Window.setDecorFitsSystemWindows(true) opt-out
+            if (Build.VERSION.SDK_INT >= 35) {
+                try {
+                    val setDecorFitsSystemWindows: Method = window.javaClass.getMethod(
+                        "setDecorFitsSystemWindows", Boolean::class.javaPrimitiveType
+                    )
+                    setDecorFitsSystemWindows.invoke(window, true)
+                } catch (e: Exception) {
+                    showToast("opt-out edge-to-edge error")
+                }
+            }
+
             val decorView = window.decorView
             decorView.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets? ->
                 val defaultInsets = v.onApplyWindowInsets(insets)

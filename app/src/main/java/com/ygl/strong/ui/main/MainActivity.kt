@@ -1,14 +1,10 @@
 package com.ygl.strong.ui.main
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.orhanobut.hawk.Hawk
 import com.ygl.strong.R
@@ -50,11 +46,9 @@ class MainActivity : BaseActivity() {
         setStatusBarTransparent()
         setControlBarTransparent()
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-        } else {
-            startInit()
-        }
+        // WRITE_EXTERNAL_STORAGE 在 API 29+ 已废弃，API 35 compileSdk 下不再需要
+        // 项目使用 scoped storage，直接初始化
+        startInit()
     }
 
     private fun startInit() {
@@ -262,18 +256,5 @@ class MainActivity : BaseActivity() {
         DB.recordVideoPlayInfo(curVideo.id,date,happyScore)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            1 -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startInit()
-            } else {
-                showToast(getString(R.string.not_enough_access))
-            }
-        }
-    }
+
 }
