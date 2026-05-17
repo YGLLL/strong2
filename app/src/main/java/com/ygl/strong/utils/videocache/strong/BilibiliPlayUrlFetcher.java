@@ -34,11 +34,11 @@ public class BilibiliPlayUrlFetcher {
             Map<String, String> params = new TreeMap<>();
             params.put("bvid", bvid);
             params.put("cid", cid);
-            params.put("qn", "64");          // 清晰度 64=720P
+            params.put("qn", "64");// 清晰度 64=720P
             params.put("otype", "json");
             params.put("fnver", "0");
-            params.put("fnval", "4048");     // 支持 dash/mp4/高清
-            params.put("fourk", "1");        // 允许4K
+            params.put("fnval", "1");//1,MP4;;16,DASH (H.264),音视频分离,返回 dash.video[] + dash.audio[];;64,DASH (H.265),同上，HEVC编码;;4048,DASH,全格式,自动返回所有可用编码（AVC/HEVC/AV1）
+            params.put("fourk", "1");// 允许4K
 
             long wts = System.currentTimeMillis() / 1000;
             params.put("wts", String.valueOf(wts));

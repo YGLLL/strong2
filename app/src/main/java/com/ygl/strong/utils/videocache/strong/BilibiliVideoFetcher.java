@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * 此类获取播放链接的方式，不支持fnval=1，返回MP4格式播放链接，
+ * 只支持音视频分离，即fnval=16,64,4048
+ * 但是此类仅获取了视频播放链接，没有获取音频播放链接
+ */
 public class BilibiliVideoFetcher {
 
     // Unofficial Bilibili API endpoint for fetching video playback URLs.
