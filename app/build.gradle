@@ -28,6 +28,8 @@ android {
         // 从 constants.properties 注入 BuildConfig，本地文件不在git中
         buildConfigField "String", "BILIBILI_COOKIE",
                 "\"${constantsProps.getProperty('BILIBILI_COOKIE', '')}\""
+        buildConfigField "String", "BUILD_NUMBER",
+                "\"${constantsProps.getProperty('BUILD_NUMBER', '')}\""
     }
 
     buildFeatures {
