@@ -3,6 +3,15 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// 从 constants.properties 读取本地敏感配置
+def constantsFile = rootProject.file('constants.properties')
+def constantsProps = new Properties()
+if (constantsFile.exists()) {
+    constantsFile.withInputStream { stream ->
+        constantsProps.load(stream)
+    }
+}
+
 android {
     namespace 'com.ygl.strong'
     compileSdk 35
@@ -15,6 +24,14 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // 从 constants.properties 注入 BuildConfig，本地文件不在git中
+        buildConfigField "String", "BILIBILI_COOKIE",
+                "\"${constantsProps.getProperty('BILIBILI_COOKIE', '')}\""
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

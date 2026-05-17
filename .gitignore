@@ -9,3 +9,9 @@
 .cxx
 local.properties
 /jks/Untitled
+HEARTBEAT.md
+.openclaw
+memory
+
+# 本地敏感配置
+constants.properties

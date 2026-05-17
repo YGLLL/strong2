@@ -1,7 +1,15 @@
 package com.ygl.strong.utils
 
+import com.ygl.strong.BuildConfig
+
 object Constant {
     const val PLAY_REFERER = "https://www.bilibili.com"
     const val PLAY_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36"
-    const val TEST_COOKIE = "buvid3=33500513-43B8-DEBB-87ED-06D4AC20330549002infoc; b_nut=1756139149; _uuid=110E2B367-A2910-45610-5DA10-7E8B6D2A347A49497infoc; buvid_fp=b398ac999131efeaafe9442c417e5dac; enable_web_push=DISABLE; buvid4=4B907CF3-4540-CD82-8867-034ED006F0CC50457-025082600-49SjM5y5DqX7edsXLWVcmg%3D%3D; DedeUserID=518358134; DedeUserID__ckMd5=0a33479b3628a2cc; CURRENT_QUALITY=0; rpdid=|(u))lkk)kmk0J'u~lYuJmJ)m; theme-tip-show=SHOWED; theme-avatar-tip-show=SHOWED; theme-switch-show=SHOWED; LIVE_BUVID=AUTO4817563173566085; PVID=1; bp_t_offset_518358134=1152482537474359296; bmg_af_switch=1; bmg_src_def_domain=i0.hdslb.com; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Njc2MTMxMzIsImlhdCI6MTc2NzM1Mzg3MiwicGx0IjotMX0.50cwkXbSZrIzMCsJdp8Nb5CHCUsOhcqU2D9pN3Wvxr8; bili_ticket_expires=1767613072; SESSDATA=6a9522e5%2C1782907772%2C2aae4%2A11CjCm0ChTm0sxiGMETy09jvZZUeZP4T9aGioKMXEY2_nO5aU5C3hdcLz9eHLOXu9euqYSVkNnOVE1ekhWUXJRNnppb1hDYk5IWTdlTFpMUVNQclBsVlJnZlVSaWltVXVnY0VkbFh2NnF2VjVYYk1PSS1ZUnVSQUR6bm9mWVo3bkdEc0czaVdHN09nIIEC; bili_jct=9db3dfcb9aafa0bb5eb9937d6abbb200; sid=5ads3r0l; share_source_origin=COPY; bsource=share_source_copy_link; CURRENT_FNVAL=4048; b_lsid=B24B17CB_19B80C28A18; home_feed_column=4; browser_resolution=689-898"
+
+    /**
+     * B站 Cookie，从 BuildConfig 读取（编译时由 constants.properties 注入）
+     * constants.properties 不在 git 中，避免泄露
+     */
+    val TEST_COOKIE: String
+        get() = BuildConfig.BILIBILI_COOKIE
 }
