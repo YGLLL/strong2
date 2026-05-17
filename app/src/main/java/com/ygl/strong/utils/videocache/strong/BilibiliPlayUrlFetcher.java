@@ -57,7 +57,7 @@ public class BilibiliPlayUrlFetcher {
                     .url(url)
                     .header("Referer", Constant.PLAY_REFERER)
                     .header("User-Agent", Constant.PLAY_USER_AGENT)
-                    .header("Cookie", Constant.TEST_COOKIE)
+                    .header("Cookie", Constant.INSTANCE.getTEST_COOKIE())
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
@@ -107,7 +107,7 @@ public class BilibiliPlayUrlFetcher {
                 .url("https://api.bilibili.com/x/web-interface/nav")
                 .header("Referer", Constant.PLAY_REFERER)
                 .header("User-Agent", Constant.PLAY_USER_AGENT)
-                .header("Cookie", Constant.TEST_COOKIE)
+                .header("Cookie", Constant.INSTANCE.getTEST_COOKIE())
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
