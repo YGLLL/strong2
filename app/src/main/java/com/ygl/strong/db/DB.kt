@@ -16,15 +16,15 @@ object DB {
     }
 
     /**
-     * page 从1开始。排除已加载的视频（bvid + cid 为唯一标识），使用 findBySQL 实现。
+     * 读取未观看视频，排除已加载的视频（bvid + cid 为唯一标识）。
+     * 不使用 OFFSET，由调用方通过增大 excludeVideos 来模拟分页。
      */
-    fun readUnWatchVideo(page:Int, pageSize:Int, excludeVideos: List<VideoDetail> = emptyList()) : List<VideoDetail> {
+    fun readUnWatchVideo(pageSize: Int, excludeVideos: List<VideoDetail> = emptyList()): List<VideoDetail> {
         if (excludeVideos.isEmpty()) {
             return LitePal
-                .where("watchDate = ?","0")
+                .where("watchDate = ?", "0")
                 .order("id")
                 .limit(pageSize)
-                .offset((page - 1) * pageSize)
                 .find(VideoDetail::class.java)
         }
 
@@ -37,7 +37,6 @@ object DB {
             AND (bvid || '|' || cid) NOT IN ($placeholders)
             ORDER BY id
             LIMIT $pageSize
-            OFFSET ${(page - 1) * pageSize}
         """.trimIndent()
 
         val cursor = LitePal.findBySQL(sql, *excludeKeys.toTypedArray())

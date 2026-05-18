@@ -31,8 +31,7 @@ class MainActivity : BaseActivity() {
     private var mPreloadManager: PreloadManager? = null
     private var mTvReplyCount:TextView? = null
 
-    private var mDBpage = 0//读取数据库的页数
-    private val READ_VIDEO_SIZE = 10//读取数据库的大小
+    private val READ_VIDEO_SIZE = 10//每次加载的视频数量
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,13 +78,15 @@ class MainActivity : BaseActivity() {
     private fun loadVideos(firstLoad:Boolean = false) {
         if (firstLoad)showLoading(false,getString(R.string.loading_network_data))
 
-        //从数据库读取数据
-        mDBpage++
-        //排除已经加载到pageView的视频（bvid+cid为唯一标识）
-        val nextList = DB.readUnWatchVideo(mDBpage, READ_VIDEO_SIZE, mVideoList)
-        //如果下一页不满了，则从网络加载数据
-        val nextNextList = DB.readUnWatchVideo(mDBpage+1, READ_VIDEO_SIZE, mVideoList)
-        if (nextNextList.size<READ_VIDEO_SIZE){
+        //从数据库读取数据，排除已经加载到pageView的视频（bvid+cid为唯一标识）
+        val nextList = DB.readUnWatchVideo(READ_VIDEO_SIZE, mVideoList)
+        //检查下一页是否还有足够数据，排除范围包含本批即将加载的视频
+        val combinedExclude = mutableListOf<VideoDetail>().apply {
+            addAll(mVideoList)
+            addAll(nextList)
+        }
+        val nextNextList = DB.readUnWatchVideo(READ_VIDEO_SIZE, combinedExclude)
+        if (nextNextList.size < READ_VIDEO_SIZE) {
             LogUtil.e("MainA","加载网络数据")
             Utils.loadVideoDataByNetwork { msg->
                 if (!TextUtils.isEmpty(msg)){
