@@ -5,4 +5,5 @@
     <string name="loading_at_full_capacity">正在全力加载中</string>
     <string name="not_enough_access">没有足够的权限</string>
     <string name="search">搜索</string>
+    <string name="press_again_to_exit">再按一次退出%1$s</string>
 </resources>

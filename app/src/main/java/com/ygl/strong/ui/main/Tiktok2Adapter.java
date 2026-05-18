@@ -2,6 +2,8 @@ package com.ygl.strong.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ygl.strong.R;
 import com.ygl.strong.db.bean.VideoDetail;
 import com.ygl.strong.utils.videocache.strong.PreloadManager;
@@ -71,9 +75,30 @@ public class Tiktok2Adapter extends PagerAdapter {
         VideoDetail item = mVideoBeans.get(position);
         //当创建页面时则开始预加载
         PreloadManager.getInstance(context).addPreloadTask(PreloadUrlsTask.RAW_URLS.get(item.getBvid()), position);
-//        Glide.with(context)
-//                .load(item.getFirst_frame())
-//                .into(viewHolder.mThumb);
+        Glide.with(context)
+                .asBitmap()
+                .load(item.getFirst_frame())
+                .into(new CustomViewTarget<ImageView, Bitmap>(viewHolder.mThumb) {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
+                        if (resource.getHeight() > resource.getWidth()) {
+                            view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        } else {
+                            view.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        }
+                        view.setImageBitmap(resource);
+                    }
+
+                    @Override
+                    public void onResourceCleared(Drawable placeholder) {
+                        view.setImageDrawable(placeholder);
+                    }
+
+                    @Override
+                    public void onLoadFailed(Drawable errorDrawable) {
+                        view.setImageDrawable(errorDrawable);
+                    }
+                });
         viewHolder.mTitle.setText(item.getTitle());
         viewHolder.mTitle.setOnClickListener(new View.OnClickListener() {
             @Override

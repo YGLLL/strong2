@@ -256,5 +256,16 @@ class MainActivity : BaseActivity() {
         DB.recordVideoPlayInfo(curVideo.id,date,happyScore)
     }
 
+    private var mBackPressedTime = 0L
+
+    override fun onBackPressed() {
+        val now = System.currentTimeMillis()
+        if (now - mBackPressedTime > 2000) {
+            mBackPressedTime = now
+            showToast(getString(R.string.press_again_to_exit,getString(R.string.app_name)))
+        } else {
+            super.onBackPressed()
+        }
+    }
 
 }
