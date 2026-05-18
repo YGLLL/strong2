@@ -1,11 +1,10 @@
-# strong2 - AI工程上下文（升级版）
+# strong2 - AI工程上下文
 
 ## 🧭 项目本质
 strong2 是一个 Android 短视频播放器应用，基于 Bilibili 逆向 API 获取视频数据，并使用 dkplayer 进行播放。
 
 核心目标不是“功能完整”，而是：
 - 播放稳定性优先
-- 音视频同步优先
 - API兼容性优先
 - 架构简洁可维护
 
@@ -45,9 +44,7 @@ MainActivity → com.ygl.strong.widget.VerticalViewPager → Tiktok2Adapter.inst
 ---
 
 ## ⚠️ 当前已知核心问题（最高优先级）
-
-1. ❗部分视频无声音
-    - 原因：音视频轨道分离
+暂时没有问题
 
 ---
 
@@ -78,15 +75,13 @@ MainActivity → com.ygl.strong.widget.VerticalViewPager → Tiktok2Adapter.inst
 
 ## 📊 优先级
 
-1. 播放问题（音频优先）
-2. API稳定性
-3. UI滑动流畅性
-4. 架构优化（最低优先级）
+1. API稳定性
+2. UI滑动流畅性
+3. 架构优化（最低优先级）
 
 ---
 
 ## 🎯 AI默认行为
 
 - 默认你正在调试 strong2
-- 默认问题与播放相关
 - 默认使用 Java/kotlin + ExoPlayer 语境
