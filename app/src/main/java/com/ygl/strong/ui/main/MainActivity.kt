@@ -166,8 +166,9 @@ class MainActivity : BaseActivity() {
                 if (position == mCurPos) return  //如果滑动后，没有进入下一个视频，那么就不重新播放当前视频了
                 recordVideoPlayInfo(mCurPos)
                 startPlay(position)
-                //当看到倒数第三页时，添加下一波数据
-                if (((mVideoList.size - (position+1))<3) && !isLoadVideosPlayUrl){
+                //剩余页数少于3时，添加下一波数据
+                if (((mVideoList.size - (position+1))<4) && !isLoadVideosPlayUrl){
+                    LogUtil.e("MainA","开始添加下一波数据, 当前总页数：${mVideoList.size}, 当前播放页码：${position+1}, 视频标题：${mVideoList[position].title}")
                     loadVideos()
                 }
             }
@@ -211,8 +212,7 @@ class MainActivity : BaseActivity() {
 
                 val rawUrl = PreloadUrlsTask.RAW_URLS[videoDetail.bvid]
                 val cacheUrl = mPreloadManager?.getPlayUrl(rawUrl)
-//                LogUtil.e("MainA","rawUrl:${rawUrl}")
-//                LogUtil.e("MainA","cacheUrl:${cacheUrl}")
+                var cacheLogMessage = ""
                 if (rawUrl == cacheUrl){
                     //没有缓存，使用原链接播放
                     showToast(getString(R.string.loading_at_full_capacity))
@@ -221,9 +221,11 @@ class MainActivity : BaseActivity() {
                     headers["Referer"] = Constant.PLAY_REFERER
                     headers["User-Agent"] = Constant.PLAY_USER_AGENT
                     mVideoView?.setUrl(rawUrl,headers)
+                    cacheLogMessage = "无缓存xxx"
                 }else{
                     //有缓存，使用缓存播放
                     mVideoView?.setUrl(cacheUrl)
+                    cacheLogMessage = "有缓存"
                 }
 
                 //请点进去看isDissociate的解释
@@ -231,6 +233,7 @@ class MainActivity : BaseActivity() {
                 viewHolder.mPlayerContainer.addView(mVideoView, 0)
                 mVideoView?.start()
                 mCurPos = position
+                LogUtil.e("MainA","当前总页数：${mVideoList.size}, 当前播放页码：${position+1}, $cacheLogMessage, 视频标题：${videoDetail.title}")
                 break
             }
         }
