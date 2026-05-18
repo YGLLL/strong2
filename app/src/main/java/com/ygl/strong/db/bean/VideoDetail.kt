@@ -59,7 +59,7 @@ class VideoDetail : LitePalSupport() {
             video.first_frame = c.getString(c.getColumnIndexOrThrow("first_frame")) ?: ""
             video.short_link_v2 = c.getString(c.getColumnIndexOrThrow("short_link_v2")) ?: ""
             video.duration = c.getInt(c.getColumnIndexOrThrow("duration"))
-            video.videoPlayUrlFailCount = c.getInt(c.getColumnIndexOrThrow("videoPlayUrlFailCount"))
+            video.videoPlayUrlFailCount = c.getInt(c.getColumnIndexOrThrow("videoplayurlfailcount"))
             return video
         }
     }
