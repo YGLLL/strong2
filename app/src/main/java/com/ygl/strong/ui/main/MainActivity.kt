@@ -33,6 +33,8 @@ class MainActivity : BaseActivity() {
 
     private val READ_VIDEO_SIZE = 10//每次加载的视频数量
 
+    private var isLoadVideosPlayUrl = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -96,13 +98,14 @@ class MainActivity : BaseActivity() {
         }
 
         if (nextList.isEmpty())return
+        isLoadVideosPlayUrl = true
         //获取播放链接
         mPreloadManager?.preloadUrls(nextList){
             runOnUiThread {
                 if (firstLoad){
                     //如果是第一次加载数据，则自动播放
-                    mPreloadManager?.setVideoPreloadedCallback{ bvid ->
-                        if (bvid == nextList[0].bvid){
+                    mPreloadManager?.setVideoPreloadedCallback{ bvid,pos ->
+                        if (pos == 0){
                             runOnUiThread {
                                 dismissLoading()
                                 mViewPager?.currentItem = 0//移动到第0页
@@ -114,6 +117,7 @@ class MainActivity : BaseActivity() {
                 }
 
                 mVideoList.addAll(nextList)
+                isLoadVideosPlayUrl = false
                 mTiktok2Adapter?.notifyDataSetChanged()//执行完这行后，会在mTiktok2Adapter内部触发预加载
             }
         }
@@ -163,7 +167,7 @@ class MainActivity : BaseActivity() {
                 recordVideoPlayInfo(mCurPos)
                 startPlay(position)
                 //当看到倒数第三页时，添加下一波数据
-                if (position == (mVideoList.size-3)){
+                if (((mVideoList.size - (position+1))<3) && !isLoadVideosPlayUrl){
                     loadVideos()
                 }
             }
@@ -207,8 +211,8 @@ class MainActivity : BaseActivity() {
 
                 val rawUrl = PreloadUrlsTask.RAW_URLS[videoDetail.bvid]
                 val cacheUrl = mPreloadManager?.getPlayUrl(rawUrl)
-                LogUtil.e("MainA","rawUrl:${rawUrl}")
-                LogUtil.e("MainA","cacheUrl:${cacheUrl}")
+//                LogUtil.e("MainA","rawUrl:${rawUrl}")
+//                LogUtil.e("MainA","cacheUrl:${cacheUrl}")
                 if (rawUrl == cacheUrl){
                     //没有缓存，使用原链接播放
                     showToast(getString(R.string.loading_at_full_capacity))

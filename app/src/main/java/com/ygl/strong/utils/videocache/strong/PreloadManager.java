@@ -212,7 +212,7 @@ public class PreloadManager {
     }
 
     //单个视频缓存完成时调用
-    public void oneVideoPreloaded(String url) {
+    public void oneVideoPreloaded(String url,int pos) {
         if (onVideoPreloaded!=null){
             String bvid = "";
             for (Map.Entry<String, String> next : PreloadUrlsTask.RAW_URLS.entrySet()) {
@@ -220,7 +220,7 @@ public class PreloadManager {
                     bvid = next.getKey();
                 }
             }
-            onVideoPreloaded.onVideoPreloaded(bvid);
+            onVideoPreloaded.onVideoPreloaded(bvid,pos);
         }
     }
 

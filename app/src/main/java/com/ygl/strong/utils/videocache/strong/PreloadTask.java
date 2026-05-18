@@ -96,7 +96,7 @@ public class PreloadTask implements Runnable {
             if (connection != null) {
                 connection.disconnect();
             }
-            mPreloadManager.oneVideoPreloaded(mRawUrl);
+            mPreloadManager.oneVideoPreloaded(mRawUrl,mPosition);
             mCacheServer=null;
             mPreloadManager=null;
             L.i("预加载结束: " + mPosition);

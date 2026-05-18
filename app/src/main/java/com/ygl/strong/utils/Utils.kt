@@ -48,17 +48,7 @@ object Utils {
                 val body = response.body()
 
                 body?.data?.archives?.forEach { bean->
-                    val videoDetail = VideoDetail()
-                    videoDetail.aid = bean.aid
-                    videoDetail.bvid = bean.bvid
-                    videoDetail.cid = bean.cid
-                    videoDetail.title = bean.title
-                    videoDetail.reply = bean.stat?.reply?:""
-                    videoDetail.tname = bean.tname
-                    videoDetail.videos = bean.videos
-                    videoDetail.first_frame = bean.first_frame
-                    videoDetail.short_link_v2 = bean.short_link_v2
-                    videoDetail.duration = bean.duration
+                    val videoDetail = VideoDetail.fromDynamicRecommendDtoVideoDetail(bean)
 
                     if (DB.isNewVideo(videoDetail) && !isSlowVideo(videoDetail)){
                         videoDetail.save()

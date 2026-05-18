@@ -1,6 +1,7 @@
 package com.ygl.strong.db.bean
 
 import android.database.Cursor
+import com.ygl.strong.http.dto.DynamicRecommendDto
 import org.litepal.crud.LitePalSupport
 
 class VideoDetail : LitePalSupport() {
@@ -19,6 +20,24 @@ class VideoDetail : LitePalSupport() {
     var duration:Int = 0
 
     companion object {
+
+        fun fromDynamicRecommendDtoVideoDetail(bean: DynamicRecommendDto.VideoDetail): VideoDetail{
+            val videoDetail = VideoDetail()
+            videoDetail.aid = bean.aid
+            videoDetail.bvid = bean.bvid
+            videoDetail.cid = bean.cid
+            videoDetail.title = bean.title
+            videoDetail.happyScore = 0
+            videoDetail.watchDate = 0
+            videoDetail.reply = bean.stat?.reply?:""
+            videoDetail.tname = bean.tname
+            videoDetail.videos = bean.videos
+            videoDetail.first_frame = bean.first_frame
+            videoDetail.short_link_v2 = bean.short_link_v2
+            videoDetail.duration = bean.duration
+            return videoDetail
+        }
+
         /**
          * 从 findBySQL 返回的 Cursor 解析一行到 VideoDetail。
          * 新增字段时请同步此方法。
@@ -30,8 +49,8 @@ class VideoDetail : LitePalSupport() {
             video.bvid = c.getString(c.getColumnIndexOrThrow("bvid")) ?: ""
             video.cid = c.getString(c.getColumnIndexOrThrow("cid")) ?: ""
             video.title = c.getString(c.getColumnIndexOrThrow("title")) ?: ""
-            video.happyScore = c.getInt(c.getColumnIndexOrThrow("happyScore"))
-            video.watchDate = c.getLong(c.getColumnIndexOrThrow("watchDate"))
+            video.happyScore = c.getInt(c.getColumnIndexOrThrow("happyscore"))
+            video.watchDate = c.getLong(c.getColumnIndexOrThrow("watchdate"))
             video.reply = c.getString(c.getColumnIndexOrThrow("reply")) ?: ""
             video.tname = c.getString(c.getColumnIndexOrThrow("tname")) ?: ""
             video.videos = c.getInt(c.getColumnIndexOrThrow("videos"))
