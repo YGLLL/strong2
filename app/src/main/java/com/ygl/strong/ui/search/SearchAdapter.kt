@@ -9,21 +9,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ygl.strong.R
-import com.ygl.strong.http.dto.ReplyDto
 import com.ygl.strong.http.dto.SearchDto
 
-/**
- * Created by ygl-gpd
- * Created date:2023/5/3 23:46
- **/
-class SearchAdapter(val mData:MutableList<SearchDto.SearchDataResultData>,val mItemClick:(pos:Int)->Unit) : RecyclerView.Adapter<SearchAdapter.ReplyViewHolder>() {
+class SearchAdapter(val mData:MutableList<SearchDto.SearchDataResultData>,val mItemClick:(pos:Int)->Unit) : RecyclerView.Adapter<SearchAdapter.SearchItemViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReplyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search,parent,false)
-        return ReplyViewHolder(view)
+        return SearchItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ReplyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchItemViewHolder, position: Int) {
         holder.mIv?.let {
             Glide.with(it).load("https:${mData[position].pic}").into(it)
         }
@@ -37,7 +32,7 @@ class SearchAdapter(val mData:MutableList<SearchDto.SearchDataResultData>,val mI
         return mData.size
     }
 
-    class ReplyViewHolder : RecyclerView.ViewHolder {
+    class SearchItemViewHolder : RecyclerView.ViewHolder {
 
         open var mIv:ImageView? = null
         open var mTvTitle:TextView? = null

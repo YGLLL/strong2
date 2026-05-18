@@ -15,10 +15,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/**
- * Created by ygl-gpd
- * Created date:2023/5/3 23:26
- **/
 class ReplyFragment(val mAid:String) : BottomSheetDialogFragment() {
 
     protected var mLoading: LoadingDialog? = null

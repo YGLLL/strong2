@@ -8,10 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ygl.strong.R
 import com.ygl.strong.http.dto.ReplyDto
 
-/**
- * Created by ygl-gpd
- * Created date:2023/5/3 23:46
- **/
 class ReplyAdapter(val mData:MutableList<ReplyDto.RepliesClass>) : RecyclerView.Adapter<ReplyAdapter.ReplyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReplyViewHolder {

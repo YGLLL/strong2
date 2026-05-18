@@ -6,13 +6,10 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
-import com.orhanobut.hawk.Hawk
 import com.ygl.strong.R
 import com.ygl.strong.base.BaseActivity
 import com.ygl.strong.db.DB
 import com.ygl.strong.db.bean.VideoDetail
-import com.ygl.strong.http.Api
-import com.ygl.strong.http.dto.ReplyDto
 import com.ygl.strong.ui.search.SearchActivity
 import com.ygl.strong.utils.Constant
 import com.ygl.strong.utils.LogUtil
@@ -21,9 +18,6 @@ import com.ygl.strong.utils.videocache.strong.PreloadManager
 import com.ygl.strong.utils.videocache.strong.PreloadUrlsTask
 import com.ygl.strong.utils.videocache.strong.ProxyVideoCacheManager
 import com.ygl.strong.widget.VerticalViewPager
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import xyz.doikki.videoplayer.player.VideoView
 
 class MainActivity : BaseActivity() {
@@ -46,8 +40,6 @@ class MainActivity : BaseActivity() {
         setStatusBarTransparent()
         setControlBarTransparent()
 
-        // WRITE_EXTERNAL_STORAGE 在 API 29+ 已废弃，API 35 compileSdk 下不再需要
-        // 项目使用 scoped storage，直接初始化
         startInit()
     }
 
