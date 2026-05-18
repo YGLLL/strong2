@@ -19,6 +19,7 @@ import java.util.concurrent.Executors;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 import xyz.doikki.videoplayer.util.L;
 
 /**
@@ -204,7 +205,7 @@ public class PreloadManager {
     }
 
     //批量获取播放链接
-    public void preloadUrls(List<VideoDetail> nextList, @NotNull Function0<Unit> next) {
+    public void preloadUrls(List<VideoDetail> nextList, @NotNull Function1<List<VideoDetail>, Unit> next) {
         PreloadUrlsTask task = new PreloadUrlsTask();
         task.mNextList = nextList;
         task.mNext = next;

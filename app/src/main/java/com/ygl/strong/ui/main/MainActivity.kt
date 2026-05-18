@@ -100,7 +100,7 @@ class MainActivity : BaseActivity() {
         if (nextList.isEmpty())return
         isLoadVideosPlayUrl = true
         //获取播放链接
-        mPreloadManager?.preloadUrls(nextList){
+        mPreloadManager?.preloadUrls(nextList){ successList ->
             runOnUiThread {
                 if (firstLoad){
                     //如果是第一次加载数据，则自动播放
@@ -116,7 +116,7 @@ class MainActivity : BaseActivity() {
                     }
                 }
 
-                mVideoList.addAll(nextList)
+                mVideoList.addAll(successList)
                 isLoadVideosPlayUrl = false
                 mTiktok2Adapter?.notifyDataSetChanged()//执行完这行后，会在mTiktok2Adapter内部触发预加载
             }

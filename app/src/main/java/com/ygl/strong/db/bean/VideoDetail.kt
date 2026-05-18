@@ -18,6 +18,7 @@ class VideoDetail : LitePalSupport() {
     var first_frame:String = ""
     var short_link_v2:String = ""
     var duration:Int = 0
+    var videoPlayUrlFailCount:Int = 0
 
     companion object {
 
@@ -35,6 +36,7 @@ class VideoDetail : LitePalSupport() {
             videoDetail.first_frame = bean.first_frame
             videoDetail.short_link_v2 = bean.short_link_v2
             videoDetail.duration = bean.duration
+            videoDetail.videoPlayUrlFailCount = 0
             return videoDetail
         }
 
@@ -57,6 +59,7 @@ class VideoDetail : LitePalSupport() {
             video.first_frame = c.getString(c.getColumnIndexOrThrow("first_frame")) ?: ""
             video.short_link_v2 = c.getString(c.getColumnIndexOrThrow("short_link_v2")) ?: ""
             video.duration = c.getInt(c.getColumnIndexOrThrow("duration"))
+            video.videoPlayUrlFailCount = c.getInt(c.getColumnIndexOrThrow("videoPlayUrlFailCount"))
             return video
         }
     }

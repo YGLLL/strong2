@@ -31,6 +31,7 @@ strong2 是一个 Android 短视频播放器应用，基于 Bilibili 逆向 API 
 ### 核心库：
 - dkplayer：安卓视频播放器，封装MediaPlayer、ExoPlayer、IjkPlayer。模仿抖音并实现预加载，列表播放，悬浮播放，广告播放，弹幕，视频水印，视频滤镜(github链接:https://github.com/Doikki/DKVideoPlayer)
 - videocache：Android官方缓存技术，源码直接放在路径utils/videocache
+- org.litepal.LitePal:简化数据库使用的工具，数据库的配置在:assets/litepal.xml，具体使用方式参考:com.ygl.strong.db，源码在:libs/litepal.jar
 
 ### 数据流：
 打开APP → LauncherActivity → 获取视频列表并存入数据库 → MainActivity → 从数据库读取视频列表 → 根据视频列表获取播放链接 → com.ygl.strong.widget.VerticalViewPager → Tiktok2Adapter.instantiateItem → PreloadManager开始预加载 → PreloadManager.setVideoPreloadedCallback → 开始播放

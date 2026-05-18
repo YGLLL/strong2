@@ -2,7 +2,6 @@ package com.ygl.strong.db
 
 import android.content.ContentValues
 import com.ygl.strong.db.bean.VideoDetail
-import com.ygl.strong.utils.Constant
 import org.litepal.LitePal
 
 
@@ -22,7 +21,7 @@ object DB {
     fun readUnWatchVideo(pageSize: Int, excludeVideos: List<VideoDetail> = emptyList()): List<VideoDetail> {
         if (excludeVideos.isEmpty()) {
             return LitePal
-                .where("watchDate = ?", "0")
+                .where("watchDate = ? and videoPlayUrlFailCount < ?", "0", "4")
                 .order("id")
                 .limit(pageSize)
                 .find(VideoDetail::class.java)
@@ -34,6 +33,7 @@ object DB {
         val sql = """
             SELECT * FROM VideoDetail
             WHERE watchDate = '0'
+            AND videoPlayUrlFailCount < 4
             AND (bvid || '|' || cid) NOT IN ($placeholders)
             ORDER BY id
             LIMIT $pageSize
