@@ -2,3 +2,4 @@
 ## 复制此文件为 constants.properties 并填入实际值
 ## 不要修改文件名，因为 constants.properties 会被 .gitignore 忽略
 BILIBILI_COOKIE=填入你的B站完整Cookie字符串
+BUILD_NUMBER=build-115
