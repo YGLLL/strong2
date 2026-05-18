@@ -128,14 +128,6 @@ class MainActivity : BaseActivity() {
         mVideoView?.pause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mVideoView?.release()
-        mPreloadManager?.removeAllPreloadTask()
-        //清除缓存，实际使用可以不需要清除，这里为了方便测试
-        ProxyVideoCacheManager.clearAllCache(this)
-    }
-
     private fun initViewPager() {
         mViewPager = findViewById(R.id.vvp)
         mViewPager?.setOffscreenPageLimit(10) //预加载10，缓存15
@@ -256,7 +248,13 @@ class MainActivity : BaseActivity() {
         DB.recordVideoPlayInfo(curVideo.id,date,happyScore)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        releaseResources()
+    }
+
     private var mBackPressedTime = 0L
+    private var mIsExiting = false
 
     override fun onBackPressed() {
         val now = System.currentTimeMillis()
@@ -264,8 +262,17 @@ class MainActivity : BaseActivity() {
             mBackPressedTime = now
             showToast(getString(R.string.press_again_to_exit,getString(R.string.app_name)))
         } else {
+            releaseResources()
             super.onBackPressed()
         }
+    }
+
+    private fun releaseResources() {
+        if (mIsExiting) return
+        mIsExiting = true
+        mVideoView?.release()
+        mPreloadManager?.removeAllPreloadTask()
+//        ProxyVideoCacheManager.clearAllCache(this)//清除所有缓存
     }
 
 }
