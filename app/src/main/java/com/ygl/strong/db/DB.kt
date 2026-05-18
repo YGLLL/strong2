@@ -9,21 +9,45 @@ import org.litepal.LitePal
 object DB {
     fun isNewVideo(videoDetail:VideoDetail): Boolean {
         val list = LitePal
-            .select("id")//选择要返回的列，这样写也许会提高性能？
+            .select("id")
             .where("aid = ? and bvid = ? and cid = ?",videoDetail.aid,videoDetail.bvid,videoDetail.cid)
             .find(VideoDetail::class.java)
         return list.size == 0
     }
 
     /**
-     * page 从1开始
+     * page 从1开始。排除已加载的视频（bvid + cid 为唯一标识），使用 findBySQL 实现。
      */
-    fun readUnWatchVideo(page:Int, pageSize:Int) : List<VideoDetail> {
-        return LitePal
-            .where("watchDate = ?","0")
-            .limit(pageSize)
-            .offset((page - 1) * pageSize)
-            .find(VideoDetail::class.java)
+    fun readUnWatchVideo(page:Int, pageSize:Int, excludeVideos: List<VideoDetail> = emptyList()) : List<VideoDetail> {
+        if (excludeVideos.isEmpty()) {
+            return LitePal
+                .where("watchDate = ?","0")
+                .order("id")
+                .limit(pageSize)
+                .offset((page - 1) * pageSize)
+                .find(VideoDetail::class.java)
+        }
+
+        val excludeKeys = excludeVideos.map { "${it.bvid}|${it.cid}" }
+        val placeholders = excludeKeys.joinToString(", ") { "?" }
+
+        val sql = """
+            SELECT * FROM VideoDetail
+            WHERE watchDate = '0'
+            AND (bvid || '|' || cid) NOT IN ($placeholders)
+            ORDER BY id
+            LIMIT $pageSize
+            OFFSET ${(page - 1) * pageSize}
+        """.trimIndent()
+
+        val cursor = LitePal.findBySQL(sql, *excludeKeys.toTypedArray())
+        val result = mutableListOf<VideoDetail>()
+        cursor.use { c ->
+            while (c.moveToNext()) {
+                result.add(VideoDetail.fromCursor(c))
+            }
+        }
+        return result
     }
 
     fun recordVideoPlayInfo(id: Long, date: Long, happyScore: Int) {

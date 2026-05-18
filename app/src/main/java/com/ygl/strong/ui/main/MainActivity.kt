@@ -81,10 +81,10 @@ class MainActivity : BaseActivity() {
 
         //从数据库读取数据
         mDBpage++
-        //todo 需要排除掉已经加载到pageView的视频
-        val nextList = DB.readUnWatchVideo(mDBpage,READ_VIDEO_SIZE)
+        //排除已经加载到pageView的视频（bvid+cid为唯一标识）
+        val nextList = DB.readUnWatchVideo(mDBpage, READ_VIDEO_SIZE, mVideoList)
         //如果下一页不满了，则从网络加载数据
-        val nextNextList = DB.readUnWatchVideo(mDBpage+1,READ_VIDEO_SIZE)
+        val nextNextList = DB.readUnWatchVideo(mDBpage+1, READ_VIDEO_SIZE, mVideoList)
         if (nextNextList.size<READ_VIDEO_SIZE){
             LogUtil.e("MainA","加载网络数据")
             Utils.loadVideoDataByNetwork { msg->
