@@ -18,14 +18,15 @@
 
 ## 技术栈
 
-| 组件 | 用途 |
-|---|---|
-| dkplayer | 视频播放器（底层 ExoPlayer），支持预加载、无缝切换 |
-| ExoPlayer | 核心播放引擎 |
+| 组件 | 用途                     |
+|---|------------------------|
+| dkplayer | 视频播放器（底层 ExoPlayer）    |
+| PreloadManager | 预加载策略                  |
+| Android官方缓存 | 视频文件磁盘缓存               |
+| ExoPlayer | 核心播放引擎                 |
 | Retrofit2 | Bilibili HTTP API 接口请求 |
-| LitePal | 视频列表本地持久化 |
-| Glide | 封面图、头像等图片加载 |
-| Android官方缓存 | 视频文件磁盘缓存 |
+| LitePal | 视频列表本地持久化              |
+| Glide | 封面图、头像等图片加载            |
 
 ## 项目结构
 
