@@ -17,7 +17,14 @@ class LauncherActivity : BaseActivity() {
         setContentView(R.layout.activity_launcher)
         setStatusBarTransparent()
         setControlBarTransparent()
-        findViewById<TextView>(R.id.tv_build_number).text = Constant.BUILD_NUMBER
+        findViewById<TextView>(R.id.tv_build_number).apply {
+            if (Constant.IS_DEBUG) {
+                text = Constant.BUILD_NUMBER
+                visibility = android.view.View.VISIBLE
+            } else {
+                visibility = android.view.View.GONE
+            }
+        }
         Utils.loadVideoDataByNetwork{msg->
             if (TextUtils.isEmpty(msg)){
                 startActivity(Intent(this, MainActivity::class.java))

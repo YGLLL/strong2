@@ -15,4 +15,7 @@ object Constant {
 
     val BUILD_NUMBER: String
         get() = BuildConfig.BUILD_NUMBER
+
+    val IS_DEBUG: Boolean
+        get() = BuildConfig.IS_DEBUG
 }

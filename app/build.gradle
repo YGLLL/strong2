@@ -30,6 +30,8 @@ android {
                 "\"${constantsProps.getProperty('BILIBILI_COOKIE', '')}\""
         buildConfigField "String", "BUILD_NUMBER",
                 "\"${constantsProps.getProperty('BUILD_NUMBER', '')}\""
+        buildConfigField "boolean", "IS_DEBUG",
+                "${constantsProps.getProperty('IS_DEBUG', 'false')}"
     }
 
     buildFeatures {
