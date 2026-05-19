@@ -6,6 +6,7 @@
 ## 界面展示
 <img src="screenshot/1.jpg" width="300"/>
 <img src="screenshot/2.jpg" width="300"/>
+<img src="screenshot/3.jpg" width="300"/>
 
 ## 项目特点
 - 短视频风格的界面，可以向下无限滑动
@@ -18,8 +19,10 @@
 - litepal
 - glide
 
+## 运行:
+将constants.properties.example复制为constants.properties，并填入实际值
+
 ## TODO:
 - 使用mvvm
-- 通过弹幕，评论，分析视频的特点，参考：https://zhuanlan.zhihu.com/p/477867834
-- 自定义一个人形的view
-- ?榜
+- 使用AI
+- 添加一个AI形象
