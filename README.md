@@ -1,4 +1,4 @@
-# strong2
+# strong
 
 **Android 短视频播放器，基于 Bilibili 逆向 API 获取视频数据，使用 dkplayer 实现滑动流畅播放。**
 
@@ -11,7 +11,7 @@
 
 ## 项目特点
 
-- **仿抖音滑动播放** — 基于 VerticalViewPager 实现无限上下滑动，配合滑动窗口预加载机制，首帧秒开
+- **仿抖音滑动播放** — 基于 VerticalViewPager 实现无限上下滑动，配合滑动窗口预加载机制，切换视频丝滑流畅
 - **Android 官方缓存** — 采用预缓存 + 播放缓存分离策略，避免重复下载，降低播放延迟
 - **Bilibili 真实数据** — 通过逆向 B 站 HTTP API 获取视频列表、播放链接等真实数据
 - **LitePal 本地持久化** — 视频列表数据先入库再展示，减少网络请求依赖
@@ -46,7 +46,7 @@ app/src/main/java/com/ygl/strong/
 
 ```
 打开 APP → LauncherActivity → 获取视频列表并写入 DB → MainActivity
-→ 从 DB 读取视频列表 → PreloadManager 滑动窗口预加载 → 首帧就绪后播放
+→ 从 DB 读取视频列表 → PreloadManager 预加载 → 首次缓存就绪后播放
 → 滑动切换 → 新视频进入预加载列表 → 旧视频释放
 ```
 
@@ -54,12 +54,8 @@ app/src/main/java/com/ygl/strong/
 
 1. 将 `constants.properties.example` 复制为 `constants.properties`
 2. 填入 `BILIBILI_COOKIE`（需要登录 B 站后从浏览器或 App 获取，用于 API 请求鉴权）
-3. 使用 Android Studio 打开项目根目录，Sync Gradle 后运行
-
-```
-cp constants.properties.example constants.properties
-# 编辑 constants.properties 填入 Cookie
-```
+3. 填入其他值，具体见constants.properties.example
+4. 使用 Android Studio 打开项目根目录，Sync Gradle 后运行
 
 ## 使用的开源库
 
