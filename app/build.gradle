@@ -51,7 +51,7 @@ android {
             if (variant.buildType.name == 'release') {
                 def vName = variant.versionName
                 def buildNum = constantsProps.getProperty('BUILD_NUMBER', 'unknown')
-                outputFileName = "app-v${vName}-${buildNum}.apk"
+                outputFileName = "app-release-v${vName}-${buildNum}.apk"
             }
         }
     }
