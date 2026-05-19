@@ -21,7 +21,7 @@ android {
         minSdk 26
         targetSdk 35
         versionCode 1
-        versionName "1.0"
+        versionName constantsProps.getProperty('VERSION_NAME', '1.0')
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -42,6 +42,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // 打包输出重命名：app-{versionName}-{buildNumber}.apk
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            if (variant.buildType.name == 'release') {
+                def vName = variant.versionName
+                def buildNum = constantsProps.getProperty('BUILD_NUMBER', 'unknown')
+                outputFileName = "app-v${vName}-${buildNum}.apk"
+            }
         }
     }
     compileOptions {

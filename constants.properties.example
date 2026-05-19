@@ -4,3 +4,4 @@
 BILIBILI_COOKIE=填入你的B站完整Cookie字符串
 IS_DEBUG=true
 BUILD_NUMBER=build-115
+VERSION_NAME=0.9
