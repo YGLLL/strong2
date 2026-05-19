@@ -1,17 +1,9 @@
 package com.ygl.strong.base
 
-import android.R
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import com.ygl.strong.widget.LoadingDialog
-import java.lang.reflect.Method
 
 open class BaseActivity : AppCompatActivity() {
     protected var mLoading: LoadingDialog? = null
@@ -27,41 +19,12 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     /**
-     * 把状态栏设成透明
-     * 适配 API 35：Android 15 强制 edge-to-edge，通过代码 opt-out
+     * 沉浸式 UI：状态栏和导航栏透明，内容延伸到系统栏下方
+     * 使用 AndroidX Activity 1.8.0+ 的 enableEdgeToEdge()，适配 API 15~35
+     * 替代旧的 setStatusBarTransparent() 和 setControlBarTransparent()
      */
-    protected open fun setStatusBarTransparent() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Android 15 (API 35) 强制 edge-to-edge，通过反射调用 Window.setDecorFitsSystemWindows(true) opt-out
-            if (Build.VERSION.SDK_INT >= 35) {
-                try {
-                    val setDecorFitsSystemWindows: Method = window.javaClass.getMethod(
-                        "setDecorFitsSystemWindows", Boolean::class.javaPrimitiveType
-                    )
-                    setDecorFitsSystemWindows.invoke(window, true)
-                } catch (e: Exception) {
-                    showToast("opt-out edge-to-edge error")
-                }
-            }
-
-            val decorView = window.decorView
-            decorView.setOnApplyWindowInsetsListener { v: View, insets: WindowInsets? ->
-                val defaultInsets = v.onApplyWindowInsets(insets)
-                defaultInsets.replaceSystemWindowInsets(
-                    defaultInsets.systemWindowInsetLeft,
-                    0,
-                    defaultInsets.systemWindowInsetRight,
-                    defaultInsets.systemWindowInsetBottom
-                )
-            }
-            ViewCompat.requestApplyInsets(decorView)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.transparent)
-        }
-    }
-
-    //设置沉浸式虚拟键，在MIUI系统中，虚拟键背景透明。原生系统中，虚拟键背景半透明。
-    protected open fun setControlBarTransparent(){
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+    protected open fun setTransparentSystemUI() {
+        enableEdgeToEdge()
     }
 
     protected open fun showToast(str:String){

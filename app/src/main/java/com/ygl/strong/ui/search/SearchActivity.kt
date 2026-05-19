@@ -29,8 +29,8 @@ class SearchActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTransparentSystemUI()
         setContentView(R.layout.activity_search)
-        setControlBarTransparent()
 
         mLLEdit = findViewById(R.id.ll_edit)
         mRv = findViewById(R.id.rv)

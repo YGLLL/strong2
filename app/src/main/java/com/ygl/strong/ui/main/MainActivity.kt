@@ -37,9 +37,8 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTransparentSystemUI()
         setContentView(R.layout.activity_main)
-        setStatusBarTransparent()
-        setControlBarTransparent()
 
         startInit()
     }

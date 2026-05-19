@@ -14,9 +14,8 @@ class LauncherActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTransparentSystemUI()
         setContentView(R.layout.activity_launcher)
-        setStatusBarTransparent()
-        setControlBarTransparent()
         findViewById<TextView>(R.id.tv_build_number).apply {
             if (Constant.IS_DEBUG) {
                 text = Constant.BUILD_NUMBER
