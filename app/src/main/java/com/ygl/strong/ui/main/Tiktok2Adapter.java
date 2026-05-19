@@ -100,14 +100,15 @@ public class Tiktok2Adapter extends PagerAdapter {
                     }
                 });
         viewHolder.mTitle.setText(item.getTitle());
-        viewHolder.mTitle.setOnClickListener(new View.OnClickListener() {
+        viewHolder.mTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onLongClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(item.getShort_link_v2())); // 替换为你要打开的网址
                 if (intent.resolveActivity(context.getPackageManager()) != null) {
                     context.startActivity(intent);
                 }
+                return true;
             }
         });
         viewHolder.mPosition = position;
