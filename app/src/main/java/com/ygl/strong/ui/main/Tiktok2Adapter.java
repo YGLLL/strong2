@@ -102,11 +102,16 @@ public class Tiktok2Adapter extends PagerAdapter {
         viewHolder.mTitle.setText(item.getTitle());
         viewHolder.mTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(item.getShort_link_v2())); // 替换为你要打开的网址
-                if (intent.resolveActivity(context.getPackageManager()) != null) {
+            public boolean onLongClick(View v) {
+                String url = item.getShort_link_v2();
+                if (url == null || url.isEmpty()) {
+                    url = "https://www.bilibili.com/video/" + item.getBvid();
+                }
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                try {
                     context.startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(context, "没有可用的浏览器", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
