@@ -1,7 +1,10 @@
 package com.ygl.strong.base
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowInsetsController
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.ygl.strong.widget.LoadingDialog
 
@@ -21,10 +24,17 @@ open class BaseActivity : AppCompatActivity() {
     /**
      * 沉浸式 UI：状态栏和导航栏透明，内容延伸到系统栏下方
      * 使用 AndroidX Activity 1.8.0+ 的 enableEdgeToEdge()，适配 API 15~35
-     * 替代旧的 setStatusBarTransparent() 和 setControlBarTransparent()
      */
     protected open fun setTransparentSystemUI() {
         enableEdgeToEdge()
+        // MIUI/HyperOS 默认会给导航栏/手势条白色背景
+        // 强制设为深色，适配视频播放器深色底部
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.setSystemBarsAppearance(
+                0,
+                WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+            )
+        }
     }
 
     protected open fun showToast(str:String){
