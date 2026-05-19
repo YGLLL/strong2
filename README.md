@@ -1,4 +1,4 @@
-# strong
+# STRONG
 
 **Android 短视频播放器，基于 Bilibili 逆向 API 获取视频数据，使用 dkplayer 实现滑动流畅播放。**
 
