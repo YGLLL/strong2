@@ -12,4 +12,7 @@ object Constant {
      */
     val TEST_COOKIE: String
         get() = BuildConfig.BILIBILI_COOKIE
+
+    val BUILD_NUMBER: String
+        get() = BuildConfig.BUILD_NUMBER
 }
