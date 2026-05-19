@@ -9,10 +9,15 @@ import com.ygl.strong.utils.LogUtil;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class BilibiliPlayUrlFetcher {
 
-    private static final OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .build();
     private static final Gson gson = new Gson();
 
     // 缓存 WBI mix key（有效期约几小时，可加过期逻辑）
