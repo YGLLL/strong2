@@ -4,9 +4,8 @@
 数据来自bilibili。**
 
 ## 界面展示
-<img src="screenshot/1.jpg" width="280"/>
-<img src="screenshot/2.jpg" width="280"/>
-<img src="screenshot/3.jpg" width="280"/>
+<img src="screenshot/1.jpg" width="300"/>
+<img src="screenshot/2.jpg" width="300"/>
 
 ## 项目特点
 - 短视频风格的界面，可以向下无限滑动
