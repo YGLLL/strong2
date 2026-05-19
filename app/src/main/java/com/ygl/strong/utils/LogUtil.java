@@ -16,46 +16,47 @@ import android.util.Log;
 public class LogUtil {
 
     private static final String TAG = "LogUtil";
+    private static final boolean DEBUG = Constant.INSTANCE.getIS_DEBUG();
 
     public static void v(String msg) {
-        v(TAG, msg);
+        if (DEBUG) v(TAG, msg);
     }
 
     public static void d(String msg) {
-        d(TAG, msg);
+        if (DEBUG) d(TAG, msg);
     }
 
     public static void i(String msg) {
-        i(TAG, msg);
+        if (DEBUG) i(TAG, msg);
     }
 
     public static void w(String msg) {
-        w(TAG, msg);
+        if (DEBUG) w(TAG, msg);
     }
 
     public static void e(String msg) {
-        e(TAG, msg);
+        if (DEBUG) e(TAG, msg);
     }
 
 
     public static void v(String tag, String msg) {
-        Log.v(tag, msg + "");
+        if (DEBUG) Log.v(tag, msg + "");
     }
 
     public static void d(String tag, String msg) {
-        Log.d(tag, msg + "");
+        if (DEBUG) Log.d(tag, msg + "");
     }
 
     public static void i(String tag, String msg) {
-        Log.i(tag, msg + "");
+        if (DEBUG) Log.i(tag, msg + "");
     }
 
     public static void w(String tag, String msg) {
-        Log.w(tag, msg + "");
+        if (DEBUG) Log.w(tag, msg + "");
     }
 
     public static void e(String tag, String msg) {
-        Log.e(tag, msg + "");
+        if (DEBUG) Log.e(tag, msg + "");
     }
 
 
