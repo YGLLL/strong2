@@ -2,9 +2,6 @@
 ## 复制此文件为 constants.properties 并填入实际值
 ## 不要修改文件名，因为 constants.properties 会被 .gitignore 忽略
 
-##bilibili cookie
-BILIBILI_COOKIE=填入你的B站完整Cookie字符串
-
 ##DEBUG标志，区别生产和开发环境
 IS_DEBUG=true
 

@@ -3,6 +3,8 @@ import okhttp3.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ygl.strong.http.base.RequestHeaderInterceptor;
+import com.ygl.strong.http.base.RequestLogInterceptor;
 import com.ygl.strong.utils.Constant;
 import com.ygl.strong.utils.LogUtil;
 
@@ -14,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 public class BilibiliPlayUrlFetcher {
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
+            .addInterceptor(new RequestLogInterceptor())
+            .addInterceptor(new RequestHeaderInterceptor())
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
@@ -112,7 +116,7 @@ public class BilibiliPlayUrlFetcher {
                 .url("https://api.bilibili.com/x/web-interface/nav")
                 .header("Referer", Constant.PLAY_REFERER)
                 .header("User-Agent", Constant.PLAY_USER_AGENT)
-                .header("Cookie", Constant.INSTANCE.getTEST_COOKIE())
+//                .header("Cookie", Constant.INSTANCE.getTEST_COOKIE())
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
@@ -120,7 +124,7 @@ public class BilibiliPlayUrlFetcher {
 
             String body = response.body().string();
             JsonObject root = new JsonParser().parse(body).getAsJsonObject();
-            if (root.get("code").getAsInt() != 0) return null;
+//            if (root.get("code").getAsInt() != 0) return null;
 
             JsonObject data = root.getAsJsonObject("data");
             if (!data.has("wbi_img")) return null;

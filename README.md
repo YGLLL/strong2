@@ -54,9 +54,8 @@ app/src/main/java/com/ygl/strong/
 ## 运行
 
 1. 将 `constants.properties.example` 复制为 `constants.properties`
-2. 填入 `BILIBILI_COOKIE`（需要登录 B 站后从浏览器或 App 获取，用于 API 请求鉴权）
-3. 填入其他值，具体见`constants.properties.example`
-4. 使用 Android Studio 打开项目根目录，Sync Gradle 后运行
+2. 填入需要的值，具体见`constants.properties.example`
+3. 使用 Android Studio 打开项目根目录，Sync Gradle 后运行
 
 ## 使用的开源库
 
