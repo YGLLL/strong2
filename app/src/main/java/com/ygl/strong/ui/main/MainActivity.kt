@@ -181,7 +181,7 @@ class MainActivity : BaseActivity() {
     private fun initVideoView() {
         mVideoView = VideoView(this) //不是从xml拿的View
         mVideoView?.setLooping(true) //循环播放
-        //以下只能二选一，看你的需求
+        //以下只能二选一
         mVideoView?.setRenderViewFactory(TikTokRenderViewFactory.create())
 //        mVideoView.setScreenScaleType(VideoView.SCREEN_SCALE_CENTER_CROP);
 

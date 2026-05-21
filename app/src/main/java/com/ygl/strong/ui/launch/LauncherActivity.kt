@@ -16,6 +16,7 @@ class LauncherActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setTransparentSystemUI()
         setContentView(R.layout.activity_launcher)
+
         findViewById<TextView>(R.id.tv_build_number).apply {
             if (Constant.IS_DEBUG) {
                 text = Constant.BUILD_NUMBER
@@ -24,6 +25,8 @@ class LauncherActivity : BaseActivity() {
                 visibility = android.view.View.GONE
             }
         }
+
+        //获取视频列表
         Utils.loadVideoDataByNetwork{msg->
             if (TextUtils.isEmpty(msg)){
                 startActivity(Intent(this, MainActivity::class.java))

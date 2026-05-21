@@ -10,8 +10,8 @@ public class StrongApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Http.initHttp();
-        LitePal.initialize(this);
-        Hawk.init(this).build();
+        Http.initHttp();//网络请求模块初始化
+        LitePal.initialize(this);//数据库初始化
+        Hawk.init(this).build();//键值对储存初始化
     }
 }
