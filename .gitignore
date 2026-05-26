@@ -12,6 +12,10 @@ local.properties
 HEARTBEAT.md
 .openclaw
 memory
-
+AGENTS.md
+IDENTITY.md
+SOUL.md
+TOOLS.md
+USER.md
 # 本地敏感配置
 constants.properties
