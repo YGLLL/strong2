@@ -271,7 +271,7 @@ class MainActivity : BaseActivity() {
         mIsExiting = true
         mVideoView?.release()
         mPreloadManager?.removeAllPreloadTask()
-//        ProxyVideoCacheManager.clearAllCache(this)//清除所有缓存
+        ProxyVideoCacheManager.clearAllCache(this)//清除所有缓存
     }
 
 }
