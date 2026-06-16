@@ -2,7 +2,6 @@ package com.ygl.strong.ui.launch
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,10 +26,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ygl.strong.R
 import com.ygl.strong.ui.main.MainActivity
 import com.ygl.strong.utils.Constant
-import com.ygl.strong.utils.Utils
 import com.ygl.strong.widget.LoadingDialog
 
 class LauncherActivity : ComponentActivity() {
@@ -41,20 +43,48 @@ class LauncherActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val viewModel: LauncherViewModel = viewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            // 驱动加载
+            LaunchedEffect(Unit) {
+                viewModel.loadVideos()
+            }
+
+            // 响应状态：LoadingDialog
+            LaunchedEffect(uiState) {
+                when (uiState) {
+                    is LauncherUiState.Loading -> {
+                        mLoading?.show(false, "加载中...")
+                    }
+                    else -> {
+                        mLoading?.dismiss()
+                    }
+                }
+            }
+
+            // 响应状态：导航 / Toast
+            LaunchedEffect(uiState) {
+                when (val state = uiState) {
+                    is LauncherUiState.Success -> {
+                        startActivity(Intent(this@LauncherActivity, MainActivity::class.java))
+                        finish()
+                    }
+                    is LauncherUiState.Error -> {
+                        Toast.makeText(
+                            this@LauncherActivity,
+                            state.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else -> {}
+                }
+            }
+
             LauncherContent(
                 buildNumber = Constant.BUILD_NUMBER,
                 isDebug = Constant.IS_DEBUG
             )
-        }
-
-        // 获取视频列表
-        Utils.loadVideoDataByNetwork { msg ->
-            if (TextUtils.isEmpty(msg)) {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-            }
         }
     }
 
