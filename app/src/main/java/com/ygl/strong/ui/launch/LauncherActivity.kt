@@ -3,9 +3,7 @@ package com.ygl.strong.ui.launch
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,18 +27,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ygl.strong.R
+import com.ygl.strong.base.BaseActivity
 import com.ygl.strong.ui.main.MainActivity
 import com.ygl.strong.utils.Constant
-import com.ygl.strong.widget.LoadingDialog
 
-class LauncherActivity : ComponentActivity() {
-
-    private var mLoading: LoadingDialog? = null
+class LauncherActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mLoading = LoadingDialog(this)
-        enableEdgeToEdge()
+        setTransparentSystemUI()
 
         setContent {
             val viewModel: LauncherViewModel = viewModel()
@@ -55,10 +50,10 @@ class LauncherActivity : ComponentActivity() {
             LaunchedEffect(uiState) {
                 when (uiState) {
                     is LauncherUiState.Loading -> {
-                        mLoading?.show(false, "加载中...")
+                        showLoading(false, "加载中...")
                     }
                     else -> {
-                        mLoading?.dismiss()
+                        dismissLoading()
                     }
                 }
             }
@@ -71,11 +66,7 @@ class LauncherActivity : ComponentActivity() {
                         finish()
                     }
                     is LauncherUiState.Error -> {
-                        Toast.makeText(
-                            this@LauncherActivity,
-                            state.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showToast(state.message)
                     }
                     else -> {}
                 }
@@ -86,11 +77,6 @@ class LauncherActivity : ComponentActivity() {
                 isDebug = Constant.IS_DEBUG
             )
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mLoading = null
     }
 }
 
