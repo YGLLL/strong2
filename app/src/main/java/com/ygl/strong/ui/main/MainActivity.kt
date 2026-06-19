@@ -3,6 +3,8 @@ package com.ygl.strong.ui.main
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -25,11 +28,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.viewpager.widget.ViewPager
 import com.ygl.strong.R
 import com.ygl.strong.base.BaseActivity
 import com.ygl.strong.db.DB
 import com.ygl.strong.db.bean.VideoDetail
+import com.ygl.strong.ui.main.MainViewModel
 import com.ygl.strong.utils.Constant
 import com.ygl.strong.utils.LogUtil
 import com.ygl.strong.utils.Utils
@@ -41,19 +46,16 @@ import xyz.doikki.videoplayer.player.VideoView
 
 class MainActivity : BaseActivity() {
 
+    private val viewModel: MainViewModel by viewModels()
+
     var mViewPager: VerticalViewPager? = null
     var mVideoView: VideoView? = null
     var mTiktok2Adapter: Tiktok2Adapter? = null
-    val mVideoList: MutableList<VideoDetail> = mutableListOf()
     var mController: TikTokController? = null
     var mCurPos: Int = 0
     private var mPreloadManager: PreloadManager? = null
 
-    private val READ_VIDEO_SIZE = 10
-
-    private var isLoadVideosPlayUrl = false
-
-    /** Compose 状态：回复数文本，变更时触发 UI 重组 */
+    /** Compose 状态：回复数文本 */
     private var mReplyCount by mutableStateOf("")
 
     /** Compose 状态：ViewPager 是否已就绪 */
@@ -62,6 +64,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTransparentSystemUI()
+
+        // 注入 PreloadManager 到 ViewModel
+        mPreloadManager = PreloadManager.getInstance(this)
+        viewModel.preloadManager = mPreloadManager
+
         setContent { MainContent() }
     }
 
@@ -69,12 +76,30 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun MainContent() {
+        // 观察视频列表
+        val videoList by viewModel.videoList.collectAsStateWithLifecycle()
+
+        // 列表变化 → 刷新适配器
+        LaunchedEffect(videoList) {
+            mTiktok2Adapter?.notifyDataSetChanged()
+        }
+
+        // 观察一次性事件（toast、首次就绪）
+        LaunchedEffect(Unit) {
+            viewModel.events.collect { event ->
+                when (event) {
+                    is MainEvent.ShowToast -> showToast(event.message)
+                    is MainEvent.FirstDataReady -> handleFirstDataReady()
+                }
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
         ) {
-            // 底层：VerticalViewPager（传统 View 嵌入 Compose）
+            // 底层：VerticalViewPager
             AndroidView(
                 factory = { ctx ->
                     VerticalViewPager(ctx).also { vvp ->
@@ -84,7 +109,7 @@ class MainActivity : BaseActivity() {
                 modifier = Modifier.fillMaxSize()
             )
 
-            // 顶层覆盖：「回复」按钮 + 回复数
+            // 顶层：回复按钮
             ReplyOverlay(
                 replyCount = mReplyCount,
                 onReplyClick = {
@@ -129,15 +154,13 @@ class MainActivity : BaseActivity() {
 
     // ─────────────────────── 初始化 ───────────────────────
 
-    /**
-     * AndroidView factory 创建 VerticalViewPager 后回调，
-     * 在此初始化所有核心部件。
-     */
     private fun onViewPagerCreated(vvp: VerticalViewPager) {
         mViewPager = vvp
         mViewPager?.id = View.generateViewId()
         mViewPager?.setOffscreenPageLimit(10)
-        mTiktok2Adapter = Tiktok2Adapter(mVideoList)
+
+        // 适配器持有 ViewModel.backingList 同一引用
+        mTiktok2Adapter = Tiktok2Adapter(viewModel.backingList)
         mViewPager?.setAdapter(mTiktok2Adapter)
         mViewPager?.setOverScrollMode(View.OVER_SCROLL_NEVER)
         mViewPager?.setOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
@@ -159,10 +182,12 @@ class MainActivity : BaseActivity() {
                 if (position == mCurPos) return
                 recordVideoPlayInfo(mCurPos)
                 startPlay(position)
-                if (((mVideoList.size - (position + 1)) < 4) && !isLoadVideosPlayUrl) {
+
+                val listSize = viewModel.videoList.value.size
+                if ((listSize - (position + 1)) < 4) {
                     LogUtil.e("MainA",
-                        "开始添加下一波数据, 当前总页数：${mVideoList.size}, 当前播放页码：${position + 1}, 视频标题：${mVideoList[position].title}")
-                    loadVideos()
+                        "开始添加下一波数据, 当前总页数：$listSize, 当前播放页码：${position + 1}, 视频标题：${viewModel.videoList.value[position].title}")
+                    viewModel.loadVideos()
                 }
             }
 
@@ -181,12 +206,27 @@ class MainActivity : BaseActivity() {
 
         // 视频播放核心
         initVideoView()
-        mPreloadManager = PreloadManager.getInstance(this)
 
         mViewPagerReady = true
 
         // 开始加载数据
-        loadVideos(true)
+        viewModel.loadVideos(true)
+    }
+
+    /**
+     * 首次数据就绪：设置预加载完成回调，自动播放第一个视频。
+     */
+    private fun handleFirstDataReady() {
+        mPreloadManager?.setVideoPreloadedCallback { _, pos ->
+            if (pos == 0) {
+                runOnUiThread {
+                    dismissLoading()
+                    mViewPager?.currentItem = 0
+                    mViewPager?.post { startPlay(0) }
+                    mPreloadManager?.setVideoPreloadedCallback(null)
+                }
+            }
+        }
     }
 
     private fun initVideoView() {
@@ -198,51 +238,6 @@ class MainActivity : BaseActivity() {
         mVideoView?.setVideoController(mController)
     }
 
-    // ─────────────────────── 数据加载 ───────────────────────
-
-    private fun loadVideos(firstLoad: Boolean = false) {
-        if (firstLoad) showLoading(false, getString(R.string.loading_network_data))
-
-        val nextList = DB.readUnWatchVideo(READ_VIDEO_SIZE, mVideoList)
-        val combinedExclude = mutableListOf<VideoDetail>().apply {
-            addAll(mVideoList)
-            addAll(nextList)
-        }
-        val nextNextList = DB.readUnWatchVideo(READ_VIDEO_SIZE, combinedExclude)
-        if (nextNextList.size < READ_VIDEO_SIZE) {
-            LogUtil.e("MainA", "加载网络数据")
-            Utils.loadVideoDataByNetwork { msg ->
-                if (!TextUtils.isEmpty(msg)) {
-                    showToast(msg)
-                }
-            }
-        }
-
-        if (nextList.isEmpty()) return
-        isLoadVideosPlayUrl = true
-
-        mPreloadManager?.preloadUrls(nextList) { successList ->
-            runOnUiThread {
-                if (firstLoad) {
-                    mPreloadManager?.setVideoPreloadedCallback { _, pos ->
-                        if (pos == 0) {
-                            runOnUiThread {
-                                dismissLoading()
-                                mViewPager?.currentItem = 0
-                                mViewPager?.post { startPlay(0) }
-                                mPreloadManager?.setVideoPreloadedCallback(null)
-                            }
-                        }
-                    }
-                }
-
-                mVideoList.addAll(successList)
-                isLoadVideosPlayUrl = false
-                mTiktok2Adapter?.notifyDataSetChanged()
-            }
-        }
-    }
-
     // ─────────────────────── 播放 ───────────────────────
 
     override fun onPause() {
@@ -252,6 +247,7 @@ class MainActivity : BaseActivity() {
 
     private fun startPlay(position: Int) {
         val count = mViewPager?.childCount ?: 0
+        val videoList = viewModel.videoList.value
         for (i in 0 until count) {
             val itemView = mViewPager?.getChildAt(i)
             val viewHolder = itemView?.tag as Tiktok2Adapter.ViewHolder
@@ -259,7 +255,7 @@ class MainActivity : BaseActivity() {
                 mVideoView?.release()
                 Utils.removeViewFormParent(mVideoView)
 
-                val videoDetail: VideoDetail = mVideoList[position]
+                val videoDetail: VideoDetail = videoList[position]
                 mReplyCount = videoDetail.reply // 触发 Compose 重组
 
                 val rawUrl = PreloadUrlsTask.RAW_URLS[videoDetail.bvid]
@@ -284,14 +280,14 @@ class MainActivity : BaseActivity() {
                 mVideoView?.start()
                 mCurPos = position
                 LogUtil.e("MainA",
-                    "当前总页数：${mVideoList.size}, 当前播放页码：${position + 1}, $cacheLogMessage, 视频标题：${videoDetail.title}")
+                    "当前总页数：${videoList.size}, 当前播放页码：${position + 1}, $cacheLogMessage, 视频标题：${videoDetail.title}")
                 break
             }
         }
     }
 
     private fun getCurReply() {
-        val videoDetail: VideoDetail = mVideoList[mCurPos]
+        val videoDetail = viewModel.videoList.value[mCurPos]
         val replyFragment = ReplyFragment(videoDetail.aid)
         replyFragment.show(supportFragmentManager, replyFragment.tag)
     }
@@ -302,7 +298,7 @@ class MainActivity : BaseActivity() {
         val duration = mVideoView?.duration ?: 0
         val ratio = if (duration != 0L) curPosition.toFloat() / duration else 0f
         val happyScore = if (ratio < 0.5) -1 else 0
-        DB.recordVideoPlayInfo(mVideoList[position].id, date, happyScore)
+        DB.recordVideoPlayInfo(viewModel.videoList.value[position].id, date, happyScore)
     }
 
     // ─────────────────────── 生命周期 ───────────────────────
