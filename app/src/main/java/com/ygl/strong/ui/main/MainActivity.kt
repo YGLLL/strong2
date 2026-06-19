@@ -1,7 +1,6 @@
 package com.ygl.strong.ui.main
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -61,6 +65,9 @@ class MainActivity : BaseActivity() {
     /** Compose 状态：ViewPager 是否已就绪 */
     private var mViewPagerReady by mutableStateOf(false)
 
+    /** Compose 状态：是否显示评论面板 */
+    private var mShowComments by mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTransparentSystemUI()
@@ -76,50 +83,74 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun MainContent() {
-        // 观察视频列表
         val videoList by viewModel.videoList.collectAsStateWithLifecycle()
 
-        // 列表变化 → 刷新适配器
-        LaunchedEffect(videoList) {
-            mTiktok2Adapter?.notifyDataSetChanged()
-        }
-
-        // 观察一次性事件（toast、首次就绪）
+        // 观察一次性事件（含列表变化同步刷新）
         LaunchedEffect(Unit) {
             viewModel.events.collect { event ->
                 when (event) {
                     is MainEvent.ShowToast -> showToast(event.message)
                     is MainEvent.FirstDataReady -> handleFirstDataReady()
+                    is MainEvent.DataSetChanged -> mTiktok2Adapter?.notifyDataSetChanged()
                 }
             }
         }
+
+        // 评论区面板高度 = 屏幕 45%
+        val screenHeightDp = LocalConfiguration.current.screenHeightDp
+        val commentsPanelHeight: Dp = (screenHeightDp * 0.45f).dp
+        val density = LocalDensity.current
+        val commentsPanelHeightPx = with(density) { commentsPanelHeight.toPx() }
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
         ) {
-            // 底层：VerticalViewPager
+            // ── 视频：评论打开时通过 graphicsLayer 整体上移 ──
             AndroidView(
                 factory = { ctx ->
                     VerticalViewPager(ctx).also { vvp ->
                         onViewPagerCreated(vvp)
                     }
                 },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        if (mShowComments) {
+                            val offset = calculateVideoOffset(commentsPanelHeightPx)
+                            translationY = -offset
+                        } else {
+                            translationY = 0f
+                        }
+                    }
             )
 
-            // 顶层：回复按钮
-            ReplyOverlay(
-                replyCount = mReplyCount,
-                onReplyClick = {
-                    if (mLoading?.isShowing != true) {
-                        getCurReply()
-                    }
-                },
+            // ── 回复按钮：评论区打开时隐藏 ──
+            if (!mShowComments) {
+                ReplyOverlay(
+                    replyCount = mReplyCount,
+                    onReplyClick = {
+                        if (mLoading?.isShowing != true) {
+                            mShowComments = true
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 5.dp, bottom = 20.dp)
+                )
+            }
+
+            // ── 评论区面板 ──
+            val curVideoAid = if (videoList.isNotEmpty()) videoList[mCurPos].aid else ""
+            ReplyPanel(
+                aid = curVideoAid,
+                visible = mShowComments,
+                onDismiss = { mShowComments = false },
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 5.dp, bottom = 20.dp)
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(commentsPanelHeight)
             )
         }
     }
@@ -286,10 +317,31 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun getCurReply() {
-        val videoDetail = viewModel.videoList.value[mCurPos]
-        val replyFragment = ReplyFragment(videoDetail.aid)
-        replyFragment.show(supportFragmentManager, replyFragment.tag)
+    /**
+     * 计算评论区打开时视频的上移偏移量（像素）。
+     * - 竖屏视频（center-crop 铺满屏幕）：上移 评论面板高度 / 2，使视频居中
+     * - 横屏视频（fit-center 带黑边）：上移使视频内容底边与评论面板顶边对齐
+     */
+    private fun calculateVideoOffset(commentsPanelHeightPx: Float): Float {
+        val vw = TikTokRenderView.getVideoWidth()
+        val vh = TikTokRenderView.getVideoHeight()
+        if (vw <= 0 || vh <= 0) return commentsPanelHeightPx / 2f
+
+        val dm = resources.displayMetrics
+        val screenWidth = dm.widthPixels
+        val screenHeight = dm.heightPixels
+
+        if (vh > vw) {
+            // 竖屏视频 → SCREEN_SCALE_CENTER_CROP，铺满屏幕
+            return commentsPanelHeightPx / 2f
+        } else {
+            // 横屏视频 → SCREEN_SCALE_DEFAULT (FIT_CENTER)
+            // 渲染宽度 = 屏幕宽度，渲染高度按比例
+            val renderedHeight = screenWidth * vh.toFloat() / vw.toFloat()
+            val blackBarHeight = (screenHeight - renderedHeight) / 2f
+            // 向上偏移直到视频底边对齐评论面板顶边
+            return maxOf(0f, commentsPanelHeightPx - blackBarHeight)
+        }
     }
 
     private fun recordVideoPlayInfo(position: Int) {

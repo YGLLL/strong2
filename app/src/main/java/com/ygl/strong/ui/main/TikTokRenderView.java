@@ -17,6 +17,13 @@ public class TikTokRenderView implements IRenderView {
 
     private final IRenderView mProxyRenderView;
 
+    /** 当前视频的原始尺寸，由 setVideoSize 设置 */
+    private static int sVideoWidth = 0;
+    private static int sVideoHeight = 0;
+
+    public static int getVideoWidth() { return sVideoWidth; }
+    public static int getVideoHeight() { return sVideoHeight; }
+
     TikTokRenderView(@NonNull IRenderView renderView) {
         this.mProxyRenderView = renderView;
     }
@@ -29,6 +36,8 @@ public class TikTokRenderView implements IRenderView {
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
         if (videoWidth > 0 && videoHeight > 0) {
+            sVideoWidth = videoWidth;
+            sVideoHeight = videoHeight;
             mProxyRenderView.setVideoSize(videoWidth, videoHeight);
             if (videoHeight > videoWidth) {
                 //竖屏视频，使用居中裁剪

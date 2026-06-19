@@ -36,7 +36,7 @@ class MainViewModel : ViewModel() {
 
     private var isLoadVideosPlayUrl = false
 
-    private val _events = MutableSharedFlow<MainEvent>()
+    private val _events = MutableSharedFlow<MainEvent>(extraBufferCapacity = 5)
     val events: SharedFlow<MainEvent> = _events.asSharedFlow()
 
     /** 外部注入，Activity 初始化后设置 */
@@ -90,6 +90,7 @@ class MainViewModel : ViewModel() {
             // 4. 更新列表（回到 Main）
             backingList.addAll(successList)
             _videoList.value = backingList.toList()
+            _events.tryEmit(MainEvent.DataSetChanged)
             isLoadVideosPlayUrl = false
             _isLoading.value = false
 
@@ -115,4 +116,5 @@ class MainViewModel : ViewModel() {
 sealed interface MainEvent {
     data class ShowToast(val message: String) : MainEvent
     data object FirstDataReady : MainEvent
+    data object DataSetChanged : MainEvent
 }
