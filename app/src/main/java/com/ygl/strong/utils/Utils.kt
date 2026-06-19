@@ -51,7 +51,7 @@ object Utils {
                     val videoDetail = VideoDetail.fromDynamicRecommendDtoVideoDetail(bean)
 
                     if (DB.isNewVideo(videoDetail) && !isSlowVideo(videoDetail)){
-                        videoDetail.save()
+                        DB.insert(videoDetail)
                     }
                 }
                 next.invoke("")

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
 }
 
 // 从 constants.properties 读取本地敏感配置
@@ -93,8 +94,11 @@ dependencies {
 //    # 可选，如需要缓存或者抖音预加载功能请引入此库
 //  implementation 'xyz.doikki.android.dkplayer:videocache:3.3.7'
 
-    //数据库使用工具
-    implementation files('libs\\litepal.jar')
+    // Room 数据库 (替代 LitePal)
+    def room_version = '2.6.1'
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     implementation 'com.github.bumptech.glide:glide:4.15.1'
 
