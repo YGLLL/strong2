@@ -46,18 +46,6 @@ class LauncherActivity : BaseActivity() {
                 viewModel.loadVideos()
             }
 
-            // 响应状态：LoadingDialog
-            LaunchedEffect(uiState) {
-                when (uiState) {
-                    is LauncherUiState.Loading -> {
-                        showLoading(false, "加载中...")
-                    }
-                    else -> {
-                        dismissLoading()
-                    }
-                }
-            }
-
             // 响应状态：导航 / Toast
             LaunchedEffect(uiState) {
                 when (val state = uiState) {

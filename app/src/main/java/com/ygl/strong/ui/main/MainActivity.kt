@@ -85,6 +85,16 @@ class MainActivity : BaseActivity() {
     private fun MainContent() {
         val videoList by viewModel.videoList.collectAsStateWithLifecycle()
 
+        // 首次加载中 → 显示 LoadingDialog
+        val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+        LaunchedEffect(isLoading) {
+            if (isLoading) {
+                showLoading(false, getString(R.string.loading_network_data))
+            } else {
+                dismissLoading()
+            }
+        }
+
         // 观察一次性事件（含列表变化同步刷新）
         LaunchedEffect(Unit) {
             viewModel.events.collect { event ->

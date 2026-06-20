@@ -22,9 +22,8 @@ import kotlin.coroutines.suspendCoroutine
 
 class MainViewModel : ViewModel() {
 
-    companion object {
-        private const val READ_VIDEO_SIZE = 10
-    }
+    //每次从数据库读取的视频数量
+    val READ_VIDEO_SIZE = 10
 
     /** 唯一真实列表，Tiktok2Adapter 直接持有此引用 */
     val backingList = mutableListOf<VideoDetail>()
@@ -51,20 +50,28 @@ class MainViewModel : ViewModel() {
         isLoadVideosPlayUrl = true
 
         viewModelScope.launch {
-            if (firstLoad) _isLoading.value = true
+            if (firstLoad) {
+                _isLoading.value = true
+            }
 
-            // 1. DB 读取本地未看视频
-            val nextList = DB.readUnWatchVideo(READ_VIDEO_SIZE, backingList)
+            // 1. DB 读取本地未看视频（IO 线程）
+            val nextList = withContext(Dispatchers.IO) {
+                DB.readUnWatchVideo(READ_VIDEO_SIZE, backingList)
+            }
             val combinedExclude = mutableListOf<VideoDetail>().apply {
                 addAll(backingList)
                 addAll(nextList)
             }
-            val nextNextList = DB.readUnWatchVideo(READ_VIDEO_SIZE, combinedExclude)
+            val nextNextList = withContext(Dispatchers.IO) {
+                DB.readUnWatchVideo(READ_VIDEO_SIZE, combinedExclude)
+            }
 
-            // 2. 不足则网络补充
+            // 2. 不足则网络补充（IO 线程）
             if (nextNextList.size < READ_VIDEO_SIZE) {
                 LogUtil.e("MainVM", "加载网络数据")
-                val msg = loadNetworkDataSuspend()
+                val msg = withContext(Dispatchers.IO) {
+                    loadNetworkDataSuspend()
+                }
                 if (!TextUtils.isEmpty(msg)) {
                     _events.emit(MainEvent.ShowToast(msg))
                 }
@@ -73,6 +80,7 @@ class MainViewModel : ViewModel() {
             if (nextList.isEmpty()) {
                 isLoadVideosPlayUrl = false
                 _isLoading.value = false
+                _events.tryEmit(MainEvent.ShowToast("loadVideos nextList isEmpty"))
                 return@launch
             }
 
@@ -81,10 +89,16 @@ class MainViewModel : ViewModel() {
             if (preloadMgr == null) {
                 isLoadVideosPlayUrl = false
                 _isLoading.value = false
+                _events.tryEmit(MainEvent.ShowToast("loadVideos preloadMgr == null"))
                 return@launch
             }
             val successList = withContext(Dispatchers.IO) {
                 preloadUrlsSuspend(preloadMgr, nextList)
+            }
+
+            //已经获得播放链接，准备自动播放
+            if (firstLoad) {
+                _events.emit(MainEvent.FirstDataReady)
             }
 
             // 4. 更新列表（回到 Main）
@@ -92,11 +106,6 @@ class MainViewModel : ViewModel() {
             _videoList.value = backingList.toList()
             _events.tryEmit(MainEvent.DataSetChanged)
             isLoadVideosPlayUrl = false
-            _isLoading.value = false
-
-            if (firstLoad) {
-                _events.emit(MainEvent.FirstDataReady)
-            }
         }
     }
 
