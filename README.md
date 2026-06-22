@@ -78,7 +78,7 @@ ViewModel 层 (MainViewModel / LauncherViewModel / ReplyViewModel)
 ```
 
 - UI 通过 `collectAsStateWithLifecycle` 订阅 ViewModel 中的 `StateFlow`
-- ViewModel 直接调用 Room DAO 和 Retrofit，未封装 Repository 层
+- ViewModel 直接调用 Room DAO 和 Retrofit
 - 网络请求、DB 读写均在协程中执行
 - 视频播放器核心（VerticalViewPager / TikTokController）保留原生 View 实现，通过 `AndroidView` Compose interop 嵌入
 
